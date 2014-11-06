@@ -1,0 +1,7 @@
+dependencies {
+    testCompile project(':method-selector')
+    testCompile project(':aop-interceptor')
+    testCompile group: 'org.springframework', name: 'spring-aop', version: '4.1.0.RELEASE'
+    testCompile group: 'org.springframework', name: 'spring-context', version: '4.1.0.RELEASE'
+    testCompile group: 'org.springframework', name: 'spring-test', version: '4.1.0.RELEASE'
+}

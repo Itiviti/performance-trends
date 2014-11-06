@@ -1,0 +1,5 @@
+dependencies {
+    testCompile project(':method-selector')
+    testCompile project(':aop-interceptor')
+    testCompile group: 'com.google.inject', name: 'guice', version: '3.0'
+}
