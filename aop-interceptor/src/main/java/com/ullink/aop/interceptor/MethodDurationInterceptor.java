@@ -1,6 +1,6 @@
 package com.ullink.aop.interceptor;
 
-import com.ullink.logging.FastLogger;
+import com.ullink.duration.logging.FastLogger;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
@@ -25,7 +25,6 @@ public class MethodDurationInterceptor implements MethodInterceptor {
             String methodArguments = Arrays.toString(invocation.getArguments());
             String logMessage = String.format(LOG_MESSAGE_FORMAT, durationNanos, className, methodName, methodArguments);
             LOGGER.log(logMessage);
-
         }
     }
 }

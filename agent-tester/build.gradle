@@ -1,4 +1,8 @@
+dependencies {
+    /* NOt necessary in real life, but it allows building the projects in the right order: the agent jar must exist before using it */
+    runtime project(':profiler-agent')
+}
+
 test {
-    // enable it if you want to run for example the tests with the profiler enabled.
-    //jvmArgs "-javaagent:../profiler-agent/build/libs/profiler-agent-1.0-SNAPSHOT.jar"
+    jvmArgs "-javaagent:../profiler-agent/build/libs/profiler-agent-1.0-SNAPSHOT.jar"
 }
