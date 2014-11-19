@@ -8,7 +8,10 @@ public class FastLogger
 {
     static
     {
-        System.setProperty(ChronicleLoggingConfig.KEY_PROPERTIES_FILE, "duration-logging.properties");
+        if (System.getProperty(ChronicleLoggingConfig.KEY_PROPERTIES_FILE) == null)
+        {
+            System.setProperty(ChronicleLoggingConfig.KEY_PROPERTIES_FILE, "duration-logging.properties");
+        }
     }
 
     private static Logger LOGGER = LoggerFactory.getLogger("DURATION");

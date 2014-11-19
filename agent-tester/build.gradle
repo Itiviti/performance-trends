@@ -1,8 +1,9 @@
 dependencies {
-    /* NOt necessary in real life, but it allows building the projects in the right order: the agent jar must exist before using it */
+    /* The agent jar must be assembled before referring it below, non-necessary dependency for real-life projects */
     runtime project(':profiler-agent')
 }
 
 test {
-    jvmArgs "-javaagent:../profiler-agent/build/libs/profiler-agent-1.0-SNAPSHOT.jar"
+    jvmArgs '-javaagent:../profiler-agent/build/libs/profiler-agent-1.0-SNAPSHOT.jar'
+    jvmArgs '-Dslf4j.chronicle.properties=../duration-logging.properties'
 }
