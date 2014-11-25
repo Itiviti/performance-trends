@@ -12,8 +12,8 @@ public class FastLogger
 {
 
     private static final int              EXCERPT_LINE_CAPACITY_IN_BYTES = 512;
-    private static final SimpleDateFormat LOG_DATETIME_FORMATTER         = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss.SSS");
-    private static final SimpleDateFormat FILENAME_DATE_FORMATTER        = new SimpleDateFormat("yyyy-MM-DD");
+    private static final SimpleDateFormat LOG_DATETIME_FORMATTER         = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    private static final SimpleDateFormat FILENAME_DATE_FORMATTER        = new SimpleDateFormat("yyyy-MM-dd");
     public static final  String           LOG_FOLDER_NAME                = "durations";
     public static final String LOGFILE_PREFIX = "duration-";
     private static FastLogger      instance;
