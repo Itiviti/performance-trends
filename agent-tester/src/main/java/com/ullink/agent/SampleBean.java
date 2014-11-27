@@ -1,8 +1,13 @@
 package com.ullink.agent;
 
-public class SampleBean {
+import java.util.logging.Logger;
 
-    public void sampleMethod() {
-       System.out.println("Doing something which is measured with the agent");
+public class SampleBean
+{
+    private static final Logger LOGGER = Logger.getLogger(SampleBean.class.getName());
+
+    public void sampleMethod()
+    {
+        LOGGER.info("Doing something which is measured with the agent");
     }
 }
