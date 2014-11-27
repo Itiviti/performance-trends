@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FastLogger
@@ -18,9 +19,11 @@ public class FastLogger
     private static final SimpleDateFormat FILENAME_DATE_FORMATTER        = new SimpleDateFormat("yyyy-MM-dd");
     public static final  String           LOG_FOLDER_NAME                = "durations";
     public static final  String           LOGFILE_PREFIX                 = "duration-";
-    private static FastLogger      instance;
-    private        IndexedChronicle       chronicle;
-    private        ExcerptAppender logger;
+
+    private IndexedChronicle chronicle;
+    private ExcerptAppender  appender;
+
+    private static final ThreadLocal<FastLogger> context = new ThreadLocal<FastLogger>();
 
     private FastLogger()
     {
@@ -31,15 +34,15 @@ public class FastLogger
             final long currentTimeMillis = System.currentTimeMillis();
             final String fileName = LOGFILE_PREFIX + FILENAME_DATE_FORMATTER.format(currentTimeMillis) + "-" + getProcessIdAsString(currentTimeMillis);
             String basePath = logBaseDir + LOG_FOLDER_NAME + File.separator + fileName;
-            LOGGER.info("Base path is: " + basePath);
+            // LOGGER.info("Base path is: " + basePath); // using standard java logging causes stackoverflow due to the hacky logger in EDMA
             ChronicleConfig config = ChronicleConfig.LARGE.clone();
             config.useUnsafe(true);
             chronicle = new IndexedChronicle(basePath, config);
-            logger = chronicle.createAppender();
+            appender = chronicle.createAppender();
         }
         catch (IOException e)
         {
-            System.err.println("Error creating Chronicle logger: " + e);
+            LOGGER.log(Level.WARNING, "Error creating Chronicle appender: " + e);
         }
 
         closeChronicle();
@@ -54,8 +57,15 @@ public class FastLogger
                 @Override
                 public void run()
                 {
-                    LOGGER.info("Shutting down logger");
-                    logger.close();
+                    LOGGER.info("Shutting down appender");
+                    try
+                    {
+                        chronicle.close();
+                    }
+                    catch (IOException e)
+                    {
+                        LOGGER.log(Level.WARNING, "Error closing chronicle appender: " + e);
+                    }
                 }
             }
         );
@@ -63,21 +73,23 @@ public class FastLogger
 
     public static FastLogger getInstance()
     {
+        FastLogger instance = context.get();
         if (instance == null)
         {
             instance = new FastLogger();
+            context.set(instance);
         }
         return instance;
     }
 
     public void log(final String logMessage)
     {
-        logger.startExcerpt(EXCERPT_LINE_CAPACITY_IN_BYTES);
-        logger.append(LOG_DATETIME_FORMATTER.format(System.currentTimeMillis()));
-        logger.append(" ");
-        logger.append(logMessage);
-        logger.append('\n');
-        logger.finish();
+        appender.startExcerpt(EXCERPT_LINE_CAPACITY_IN_BYTES);
+        appender.append(LOG_DATETIME_FORMATTER.format(System.currentTimeMillis()));
+        appender.append(" ");
+        appender.append(logMessage);
+        appender.append('\n');
+        appender.finish();
     }
 
     private static String getProcessIdAsString(final long fallback)
@@ -94,4 +106,5 @@ public class FastLogger
             return jvmProcessName.substring(0, index);
         }
     }
+
 }

@@ -22,12 +22,14 @@ public class DurationTransformer implements ClassFileTransformer
         byte[] instrumentedBytes = null;
 
         /* TODO use class selector utilities instead of hard-coding. Second condition avoids stackoverflow / infinite loop! */
-        String profiledPackage = "ullink"; //or e.g. "com/ullink/ulbridge/plugins";
-        if (className.contains(profiledPackage) && !className.contains(FastLogger.class.getSimpleName()))
+        String profiledPackage = "com/ullink/ulbridge"; // e.g. "com/ullink/ulbridge/plugins";
+        if (className.contains(profiledPackage) && !className.contains(FastLogger.class.getSimpleName()) && !className.contains("$"))
         {
             try
             {
+                //LOGGER.info("Instrumenting class: " + className); // TODO only log this while experimenting!
                 instrumentedBytes = getInstrumentedBytes(classFileBuffer);
+                //LOGGER.info("Successfully instrumented class: " + className); // TODO only log this while experimenting!
             }
             catch (Throwable e)
             {
@@ -57,16 +59,16 @@ public class DurationTransformer implements ClassFileTransformer
             /* TODO use method selector utilities instead of hard-coding. */
             if (Modifier.isPublic(methodModifiers) && !Modifier.isNative(methodModifiers) && !Modifier.isAbstract(methodModifiers))
             {
-                LOGGER.info("Instrumenting method: " + method.getLongName()); // TODO only log this while experimenting!
+                //LOGGER.info("Instrumenting method: " + method.getLongName()); // TODO only log this while experimenting!
                 method.addLocalVariable("startTime", CtClass.longType);
                 method.insertBefore("startTime = System.nanoTime();");
                 String profilerLogging = createDurationLogLine(method);
                 method.insertAfter(profilerLogging);
+                //LOGGER.info("Instrumentation complete for: " + method.getLongName()); // TODO only log this while experimenting!
             }
-            instrumentedBytes = ctClass.toBytecode();
-            ctClass.detach();
-            LOGGER.info("Instrumentation complete for: " + method.getLongName()); // TODO only log this while experimenting!
         }
+        instrumentedBytes = ctClass.toBytecode();
+        ctClass.detach();
         return instrumentedBytes;
     }
 

@@ -1,4 +1,4 @@
 dependencies {
-    /* TODO: check newer versions, but remain compatible to Java 6 */
+    /* TODO: check newer versions, but stay compatible to Java 6 */
     compile group: 'net.openhft', name: 'chronicle', version: '2.0.1'
 }
