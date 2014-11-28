@@ -32,10 +32,12 @@ public class FastLogger
             // TODO: make path configurable, only use this as default
             final String logBaseDir = System.getProperty("java.io.tmpdir");
             final long currentTimeMillis = System.currentTimeMillis();
-            final String fileName = LOGFILE_PREFIX + FILENAME_DATE_FORMATTER.format(currentTimeMillis) + "-" + getProcessIdAsString(currentTimeMillis);
-            String basePath = logBaseDir + LOG_FOLDER_NAME + File.separator + fileName;
-            // LOGGER.info("Base path is: " + basePath); // using standard java logging causes stackoverflow due to the hacky logger in EDMA
-            ChronicleConfig config = ChronicleConfig.LARGE.clone();
+            final String fileName = LOGFILE_PREFIX + FILENAME_DATE_FORMATTER.format(currentTimeMillis) + "-" + getProcessIdAsString(currentTimeMillis)
+                    + "-" + Thread.currentThread().getId();
+
+            String basePath = logBaseDir + File.separator + LOG_FOLDER_NAME + File.separator + fileName;
+            //LOGGER.info("Base path is: " + basePath); // using standard java logging causes stackoverflow due to the hacky logger in EDMA
+            ChronicleConfig config = ChronicleConfig.SMALL.clone();
             config.useUnsafe(true);
             chronicle = new IndexedChronicle(basePath, config);
             appender = chronicle.createAppender();

@@ -22,7 +22,7 @@ public class DurationTransformer implements ClassFileTransformer
         byte[] instrumentedBytes = null;
 
         /* TODO use class selector utilities instead of hard-coding. Second condition avoids stackoverflow / infinite loop! */
-        String profiledPackage = "com/ullink/ulbridge"; // e.g. "com/ullink/ulbridge/plugins";
+        String profiledPackage = "com/ullink/ulbridge/plugins/edma/EnhancedDMA"; // e.g. "com/ullink/ulbridge/plugins";
         if (className.contains(profiledPackage) && !className.contains(FastLogger.class.getSimpleName()) && !className.contains("$"))
         {
             try
