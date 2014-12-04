@@ -33,7 +33,7 @@ public class FastLogger
             final String logBaseDir = System.getProperty("java.io.tmpdir");
             final long currentTimeMillis = System.currentTimeMillis();
             final String fileName = LOGFILE_PREFIX + FILENAME_DATE_FORMATTER.format(currentTimeMillis) + "-" + getProcessIdAsString(currentTimeMillis)
-                    + "-" + Thread.currentThread().getId();
+                + "-" + Thread.currentThread().getId();
 
             String basePath = logBaseDir + File.separator + LOG_FOLDER_NAME + File.separator + fileName;
             //LOGGER.info("Base path is: " + basePath); // using standard java logging causes stackoverflow due to the hacky logger in EDMA
@@ -46,31 +46,40 @@ public class FastLogger
         {
             LOGGER.log(Level.WARNING, "Error creating Chronicle appender: " + e);
         }
-
-        closeChronicle();
+        finally
+        {
+            autoCloseChronicleOnExit();
+        }
     }
 
-    private void closeChronicle()
+    private void autoCloseChronicleOnExit()
     {
         Runtime currentRuntime = Runtime.getRuntime();
-        currentRuntime.addShutdownHook(
-            new Thread()
-            {
-                @Override
-                public void run()
+        try
+        {
+            currentRuntime.addShutdownHook(
+                new Thread()
                 {
-                    LOGGER.info("Shutting down appender");
-                    try
+                    @Override
+                    public void run()
                     {
-                        chronicle.close();
-                    }
-                    catch (IOException e)
-                    {
-                        LOGGER.log(Level.WARNING, "Error closing chronicle appender: " + e);
+                        LOGGER.info("Shutting down appender");
+                        try
+                        {
+                            chronicle.close();
+                        }
+                        catch (IOException e)
+                        {
+                            LOGGER.log(Level.WARNING, "Error closing chronicle appender: " + e);
+                        }
                     }
                 }
-            }
-        );
+            );
+        }
+        catch (IllegalStateException e)
+        {
+            LOGGER.info("Could not close logger due to: " + e);
+        }
     }
 
     public static FastLogger getInstance()
