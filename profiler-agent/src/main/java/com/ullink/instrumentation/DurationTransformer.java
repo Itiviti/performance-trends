@@ -8,12 +8,9 @@ import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class DurationTransformer implements ClassFileTransformer
 {
-    private static final Logger LOGGER = Logger.getLogger(DurationTransformer.class.getName());
 
     public byte[] transform(ClassLoader loader, String className,
         Class classBeingRedefined, ProtectionDomain protectionDomain,
@@ -22,18 +19,19 @@ public class DurationTransformer implements ClassFileTransformer
         byte[] instrumentedBytes = null;
 
         /* TODO use class selector utilities instead of hard-coding. Second condition avoids stackoverflow / infinite loop! */
-        String profiledPackage = "ullink"; // e.g. "com/ullink/ulbridge/plugins";
+        // e.g. EDMA: "com/ullink/ulbridge/plugins";
+        // e.g. SMART: "com/ullink/ulbridge2/modules/bee";
+        String profiledPackage = "com/ullink/ulbridge";
         if (className.contains(profiledPackage) && !className.contains(FastLogger.class.getSimpleName()) && !className.contains("$"))
         {
             try
             {
-                //LOGGER.info("Instrumenting class: " + className); // TODO only log this while experimenting!
+                //System.out.println("Instrumenting class: " + className); // TODO only log this while experimenting!
                 instrumentedBytes = getInstrumentedBytes(classFileBuffer);
-                //LOGGER.info("Successfully instrumented class: " + className); // TODO only log this while experimenting!
-            }
-            catch (Throwable e)
+                //System.out.println("Successfully instrumented class: " + className); // TODO only log this while experimenting!
+            } catch (Exception e)
             {
-                LOGGER.log(Level.WARNING, "Exception: " + e);
+                System.err.println("Exception while transforming class (using thus original bytecode): " + className + ", exception is: " + e);
             }
         }
         if (instrumentedBytes != null)
@@ -56,15 +54,15 @@ public class DurationTransformer implements ClassFileTransformer
         for (CtMethod method : methods)
         {
             int methodModifiers = method.getModifiers();
-            /* TODO use method selector utilities instead of hard-coding. */
+            /* TODO use method-selector utilities instead of hard-coding. */
             if (Modifier.isPublic(methodModifiers) && !Modifier.isNative(methodModifiers) && !Modifier.isAbstract(methodModifiers))
             {
-                //LOGGER.info("Instrumenting method: " + method.getLongName()); // TODO only log this while experimenting!
+                //System.out.println("Instrumenting method: " + method.getLongName()); // TODO only log this while experimenting!
                 method.addLocalVariable("startTime", CtClass.longType);
                 method.insertBefore("startTime = System.nanoTime();");
                 String profilerLogging = createDurationLogLine(method);
                 method.insertAfter(profilerLogging);
-                //LOGGER.info("Instrumentation complete for: " + method.getLongName()); // TODO only log this while experimenting!
+                //System.out.println("Instrumentation complete for: " + method.getLongName()); // TODO only log this while experimenting!
             }
         }
         instrumentedBytes = ctClass.toBytecode();
@@ -75,6 +73,7 @@ public class DurationTransformer implements ClassFileTransformer
     private String createDurationLogLine(CtMethod method)
     {
         String methodDetails = " for method " + method.getLongName();
+        /* TODO: use log-formatter utilities (use the same log format in both agent and interceptors) */
         return "com.ullink.duration.logging.FastLogger.getInstance().log(\"### Duration nanos: \"+ (System.nanoTime() - startTime) " + "+ \"" + methodDetails + "\"" + ");";
     }
 }

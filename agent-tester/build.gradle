@@ -5,5 +5,4 @@ dependencies {
 
 test {
     jvmArgs '-javaagent:../profiler-agent/build/libs/profiler-agent-1.0-SNAPSHOT.jar'
-    jvmArgs '-Dslf4j.chronicle.properties=../duration-logging.properties'
 }
