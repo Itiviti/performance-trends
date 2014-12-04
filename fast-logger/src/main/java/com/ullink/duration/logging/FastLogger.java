@@ -24,6 +24,7 @@ public class FastLogger
 
     private FastLogger()
     {
+        autoCloseChronicleOnExit();
         try
         {
             final long currentTimeMillis = System.currentTimeMillis();
@@ -45,8 +46,6 @@ public class FastLogger
         catch (IOException e)
         {
             System.err.println("Error creating Chronicle appender: " + e);
-        } finally {
-            autoCloseChronicleOnExit();
         }
     }
 

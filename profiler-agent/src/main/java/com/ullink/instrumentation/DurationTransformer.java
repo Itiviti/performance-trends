@@ -21,6 +21,8 @@ public class DurationTransformer implements ClassFileTransformer
         /* TODO use class selector utilities instead of hard-coding. Second condition avoids stackoverflow / infinite loop! */
         // e.g. EDMA: "com/ullink/ulbridge/plugins";
         // e.g. SMART: "com/ullink/ulbridge2/modules/bee";
+        // e.g. both EDMA and SMART: "com/ullink/ulbridge"
+        // e.g. only main EDMA entry class: com/ullink/ulbridge/plugins/edma/EnhancedDMA
         String profiledPackage = "com/ullink/ulbridge";
         if (className.contains(profiledPackage) && !className.contains(FastLogger.class.getSimpleName()) && !className.contains("$"))
         {
