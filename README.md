@@ -10,7 +10,7 @@ Note: we have a basic working Java agent also, you can test it by running the be
 
 # Attaching the java profiler agent to any Ullink project (to gather statistics while the tests run)
 
-## For Ant project use e.g.
+## For Ant projects use:
 
 ```
 ant test -Dtest.jvmarg=-javaagent:d:\Data\Code\performance-trends\profiler-agent\build\libs\profiler-agent-1.0-SNAPSHOT.jar
@@ -37,15 +37,21 @@ def isProfilingEnabled(){
 }
 ```
 
- and the running the build like in the below example:
+and then running the build like in the below example:
 
  `gradlew clean build -PdoProfile`
 
- Where to look for logs:
+# Where to look for the log files?
 
- Logs are generated in the java temp dir's `durations/` subdirectory.
+ Logs are generated in the java temp dir's `durations/` subdirectory (we will have to make it configurable)
 
+
+# How can I merge the multiple log files in a single one?
+
+ Just use this linux command (also works a Git bash in windows):
+
+ `rm -rf *.index && find . -type f -name '*.data' -exec grep -a Duration {} \; > merged.log && rm -rf *.data`
 
 # Markdown?
 
-This file is a markdown file. For editing/formatting options in this README you can find tips in [Markdown cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
+This file is a markdown file. For formatting tips check [Markdown cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
