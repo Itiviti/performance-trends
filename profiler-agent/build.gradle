@@ -16,4 +16,5 @@ jar {
                 'Implementation-Title': 'Ullink performance profiler agent',
                 'Implementation-Version': version,
                 'Implementation-Vendor': 'Ullink')
-    }}
+    }
+}
