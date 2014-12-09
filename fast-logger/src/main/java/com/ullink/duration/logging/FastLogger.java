@@ -109,8 +109,8 @@ public class FastLogger
     public void log(final String logMessage)
     {
         appender.startExcerpt(EXCERPT_LINE_CAPACITY_IN_BYTES);
-        appender.append(LOG_DATETIME_FORMATTER.format(System.currentTimeMillis()));
-        appender.append(" ");
+        //appender.append(LOG_DATETIME_FORMATTER.format(System.currentTimeMillis()));
+        //appender.append(" ");
         appender.append(logMessage);
         appender.append('\n');
         appender.finish();

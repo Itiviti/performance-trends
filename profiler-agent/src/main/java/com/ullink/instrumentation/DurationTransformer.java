@@ -1,7 +1,9 @@
 package com.ullink.instrumentation;
 
 import com.ullink.duration.logging.FastLogger;
+import com.ullink.performance.log.fomat.PerformanceTrendLogFormatter;
 import javassist.*;
+import javassist.bytecode.MethodInfo;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -11,6 +13,11 @@ import java.security.ProtectionDomain;
 
 public class DurationTransformer implements ClassFileTransformer
 {
+
+    private static final String LOGGER_START = "com.ullink.duration.logging.FastLogger.getInstance().log(";
+    private static final String LOGGER_END = ");";
+    private static final String ESCAPED_QUOTES = "\"";
+    private static final String LOG_MESSAGE_TEMPLATE = ESCAPED_QUOTES + PerformanceTrendLogFormatter.LOG_MESSAGE_FORMAT + ESCAPED_QUOTES;
 
     public byte[] transform(ClassLoader loader, String className,
         Class classBeingRedefined, ProtectionDomain protectionDomain,
@@ -23,7 +30,7 @@ public class DurationTransformer implements ClassFileTransformer
         // e.g. SMART: "com/ullink/ulbridge2/modules/bee";
         // e.g. both EDMA and SMART: "com/ullink/ulbridge"
         // e.g. only main EDMA entry class: com/ullink/ulbridge/plugins/edma/EnhancedDMA
-        String profiledPackage = "com/ullink/ulbridge";
+        String profiledPackage = "ullink";
         if (className.contains(profiledPackage) && !className.contains(FastLogger.class.getSimpleName()) && !className.contains("$"))
         {
             try
@@ -72,10 +79,16 @@ public class DurationTransformer implements ClassFileTransformer
         return instrumentedBytes;
     }
 
-    private String createDurationLogLine(CtMethod method)
-    {
-        String methodDetails = " for method " + method.getLongName();
+    private String createDurationLogLine(CtMethod method) {
         /* TODO: use log-formatter utilities (use the same log format in both agent and interceptors) */
-        return "com.ullink.duration.logging.FastLogger.getInstance().log(\"### Duration nanos: \"+ (System.nanoTime() - startTime) " + "+ \"" + methodDetails + "\"" + ");";
+
+        CtClass instrumentedClass = method.getDeclaringClass();
+        String packageName = instrumentedClass.getPackageName();
+        String className = instrumentedClass.getSimpleName();
+        String methodName = method.getName();
+        String threadName = Thread.currentThread().getName();
+        /* TODO:  off course this won't stay like this, just tested the integration with logstash */
+        String loggerLine = String.format(LOGGER_START + "System.currentTimeMillis() + " + ESCAPED_QUOTES + PerformanceTrendLogFormatter.LOG_SECTION_SEPARATOR + ESCAPED_QUOTES + LOG_MESSAGE_TEMPLATE, packageName, className, methodName, threadName) + " + (System.nanoTime() - startTime) " + LOGGER_END;
+        return loggerLine;
     }
 }
