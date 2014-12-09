@@ -86,7 +86,7 @@ public class DurationTransformer implements ClassFileTransformer
         String packageName = instrumentedClass.getPackageName();
         String className = instrumentedClass.getSimpleName();
         String methodName = method.getName();
-        String threadName = Thread.currentThread().getName();
+        String threadName = Thread.currentThread().getName(); // TODO: use actual thread name not the transformer's!
         /* TODO:  off course this won't stay like this, just tested the integration with logstash */
         String loggerLine = String.format(LOGGER_START + "System.currentTimeMillis() + " + ESCAPED_QUOTES + PerformanceTrendLogFormatter.LOG_SECTION_SEPARATOR + ESCAPED_QUOTES + LOG_MESSAGE_TEMPLATE, packageName, className, methodName, threadName) + " + (System.nanoTime() - startTime) " + LOGGER_END;
         return loggerLine;
