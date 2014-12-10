@@ -47,7 +47,7 @@ and then running the build like in the below example:
 
  Just use this linux command (also works a Git bash in windows):
 
- `rm -rf *.index && find . -type f -name '*.data' -exec grep -a '`' {} \; > merged.log && rm -rf *.data`
+ rm -rf .index && find . -type f -name '.data' -exec grep -a '`' {} \; > merged.log && rm -rf *.data
 
 # Markdown?
 
