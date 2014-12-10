@@ -10,10 +10,10 @@
 ## For Ant projects use:
 
 ```
-ant test -Dtest.jvmarg=-javaagent:d:\Data\Code\performance-trends\profiler-agent\build\libs\profiler-agent-1.0-SNAPSHOT.jar
+ant test -Dtest.jvmarg="-javaagent:d:\\Data\\Code\\performance-trends\\profiler-agent\\build\\libs\\profiler-agent-1.0-SNAPSHOT.jar=d:\\Data\\method-selection.properties,d:\\logs,SMART"
 ```
 
- (if you need more args search development\buildtools\ant\antref\build.xml for jvmArgs)
+Note: first agent arg is the path to method selector properties file, the second in the desired output location (optional, default to java temp dir), the 3rd is a tag (optional)
 
 
 ## For Gradle there is no possibility to pass the test JVM args from command line, so you'll have to modify your project's Gradle build file by adding:
@@ -21,7 +21,7 @@ ant test -Dtest.jvmarg=-javaagent:d:\Data\Code\performance-trends\profiler-agent
 ```
 if (isProfilingEnabled()) {
     test {
-        jvmArgs '-javaagent:d:\\Data\\Code\\performance-trends\\profiler-agent\\build\\libs\\profiler-agent-1.0-SNAPSHOT.jar'
+        jvmArgs '-javaagent:d:\\Data\\Code\\performance-trends\\profiler-agent\\build\\libs\\profiler-agent-1.0-SNAPSHOT.jar=d:\\Data\\method-selection.properties,d:\\logs,EDMA'
     }
 }
 ```
@@ -45,7 +45,7 @@ and then running the build like in the below example:
 
 # How can I merge the multiple log files in a single one?
 
- Just use this linux command (also works a Git bash in windows):
+ Just use this linux command (also works in a Git bash from Windows):
 
  rm -rf *.index && find . -type f -name '\*.data' -exec grep -a '`' {} \; > merged.log && rm -rf *.data
 
