@@ -3,7 +3,6 @@ package com.ullink.instrumentation;
 import com.ullink.duration.logging.FastLogger;
 import com.ullink.performance.log.fomat.PerformanceTrendLogFormatter;
 import javassist.*;
-import javassist.bytecode.MethodInfo;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -30,7 +29,7 @@ public class DurationTransformer implements ClassFileTransformer
         // e.g. SMART: "com/ullink/ulbridge2/modules/bee";
         // e.g. both EDMA and SMART: "com/ullink/ulbridge"
         // e.g. only main EDMA entry class: com/ullink/ulbridge/plugins/edma/EnhancedDMA
-        String profiledPackage = "ullink";
+        String profiledPackage = "com/ullink/ulbridge2/modules/bee";
         if (className.contains(profiledPackage) && !className.contains(FastLogger.class.getSimpleName()) && !className.contains("$"))
         {
             try
