@@ -13,81 +13,96 @@ import java.security.ProtectionDomain;
 public class DurationTransformer implements ClassFileTransformer
 {
 
-    private static final String LOGGER_START = "com.ullink.duration.logging.FastLogger.getInstance().log(";
-    private static final String LOGGER_END = ");";
-    private static final String ESCAPED_QUOTES = "\"";
+    private static final String LOGGER_START         = "com.ullink.duration.logging.FastLogger.getInstance().log(";
+    private static final String LOGGER_END           = ");";
+    private static final String ESCAPED_QUOTES       = "\"";
     private static final String LOG_MESSAGE_TEMPLATE = ESCAPED_QUOTES + PerformanceTrendLogFormatter.LOG_MESSAGE_FORMAT + ESCAPED_QUOTES;
+
+    /**
+     * e.g. EDMA: com.ullink.ulbridge.plugins
+     * e.g. only main EDMA entry class and classes from the same package: com.ullink.ulbridge.plugins.edma
+     * e.g. SMART: com.ullink.ulbridge2.modules.bee
+     * e.g. both EDMA and SMART: com.ullink.ulbridge
+     */
+    private static final String HARD_CODED_PACKAGE_TO_PROFILE = "com.ullink";
 
     public byte[] transform(ClassLoader loader, String className,
         Class classBeingRedefined, ProtectionDomain protectionDomain,
         byte[] classFileBuffer) throws IllegalClassFormatException
     {
+
         byte[] instrumentedBytes = null;
 
-        /* TODO use class selector utilities instead of hard-coding. Second condition avoids stackoverflow / infinite loop! */
-        // e.g. EDMA: "com/ullink/ulbridge/plugins";
-        // e.g. SMART: "com/ullink/ulbridge2/modules/bee";
-        // e.g. both EDMA and SMART: "com/ullink/ulbridge"
-        // e.g. only main EDMA entry class: com/ullink/ulbridge/plugins/edma/EnhancedDMA
-        String profiledPackage = "com/ullink/ulbridge2/modules/bee";
-        if (className.contains(profiledPackage) && !className.contains(FastLogger.class.getSimpleName()) && !className.contains("$"))
+        /* Skipping inner classes and also avoid instrumenting FastLogger itself (that would lead to stack overflow) */
+        if (!className.contains(FastLogger.class.getSimpleName()) && !className.contains("$"))
         {
             try
             {
-                //System.out.println("Instrumenting class: " + className); // TODO only log this while experimenting!
                 instrumentedBytes = getInstrumentedBytes(classFileBuffer);
-                //System.out.println("Successfully instrumented class: " + className); // TODO only log this while experimenting!
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 System.err.println("Exception while transforming class (using thus original bytecode): " + className + ", exception is: " + e);
             }
         }
-        if (instrumentedBytes != null)
-        {
+        if (instrumentedBytes != null) {
             return instrumentedBytes;
-        }
-        else
-        {
+        } else {
             return classFileBuffer;
         }
     }
 
-    private byte[] getInstrumentedBytes(byte[] originalBytes) throws IOException, CannotCompileException
+    private byte[] getInstrumentedBytes(byte[] originalClassBytes) throws IOException, CannotCompileException
     {
-        byte[] instrumentedBytes = null;
         ClassPool classPool = ClassPool.getDefault();
-        CtClass ctClass = classPool.makeClass(new ByteArrayInputStream(
-            originalBytes));
+        CtClass ctClass = classPool.makeClass(new ByteArrayInputStream(originalClassBytes));
         CtMethod[] methods = ctClass.getDeclaredMethods();
+        boolean isInstrumented = false;
         for (CtMethod method : methods)
         {
             int methodModifiers = method.getModifiers();
-            /* TODO use method-selector utilities instead of hard-coding. */
             if (Modifier.isPublic(methodModifiers) && !Modifier.isNative(methodModifiers) && !Modifier.isAbstract(methodModifiers))
             {
-                //System.out.println("Instrumenting method: " + method.getLongName()); // TODO only log this while experimenting!
-                method.addLocalVariable("startTime", CtClass.longType);  // TODO find a more unique name!
-                method.insertBefore("startTime = System.nanoTime();");
-                String profilerLogging = createDurationLogLine(method);
-                method.insertAfter(profilerLogging);
-                //System.out.println("Instrumentation complete for: " + method.getLongName()); // TODO only log this while experimenting!
+                CtClass instrumentedClass = method.getDeclaringClass();
+                String packageName = instrumentedClass.getPackageName();
+                String className = instrumentedClass.getSimpleName();
+                String methodName = method.getName();
+                /* TODO use method-selector utilities instead of this method! */
+                if (isInstrumentationEnabledForMethod(packageName, className, methodName))
+                {
+                    method.addLocalVariable("startTime", CtClass.longType);  // TODO find a more unique name!
+                    method.insertBefore("startTime = System.nanoTime();");
+                    String profilerLogging = createDurationLogLine(packageName, className, methodName);
+                    method.insertAfter(profilerLogging);
+                    isInstrumented = true;
+                }
             }
         }
-        instrumentedBytes = ctClass.toBytecode();
-        ctClass.detach();
-        return instrumentedBytes;
+        if (isInstrumented)
+        {
+            byte[] instrumentedClassBytes = ctClass.toBytecode();
+            ctClass.detach();
+            return instrumentedClassBytes;
+        }
+        else
+        {
+            return originalClassBytes;
+        }
     }
 
-    private String createDurationLogLine(CtMethod method) {
-        /* TODO: use log-formatter utilities (use the same log format in both agent and interceptors) */
+    private boolean isInstrumentationEnabledForMethod(String packageName, String className, String methodName)
+    {
+        return packageName.startsWith(HARD_CODED_PACKAGE_TO_PROFILE);
+    }
 
-        CtClass instrumentedClass = method.getDeclaringClass();
-        String packageName = instrumentedClass.getPackageName();
-        String className = instrumentedClass.getSimpleName();
-        String methodName = method.getName();
-        String threadName = Thread.currentThread().getName(); // TODO: use actual thread name not the transformer's!
-        /* TODO:  off course this won't stay like this, just tested the integration with logstash */
-        String loggerLine = String.format(LOGGER_START + "System.currentTimeMillis() + " + ESCAPED_QUOTES + PerformanceTrendLogFormatter.LOG_SECTION_SEPARATOR + ESCAPED_QUOTES + LOG_MESSAGE_TEMPLATE, packageName, className, methodName, threadName) + " + (System.nanoTime() - startTime) " + LOGGER_END;
+    private String createDurationLogLine(String packageName, String className, String methodName)
+    {
+        /* TODO: get the thread name of the instrumented class, this currently takes the name of the classloader thread  */
+        String threadName = Thread.currentThread().getName();
+        /* TODO: refactor this whole thing using String formatter. Take into consideration tha the same log-formatter will also be used by interceptors! */
+        String loggerLine =
+            String.format(LOGGER_START + "System.currentTimeMillis() + " + ESCAPED_QUOTES + PerformanceTrendLogFormatter.LOG_SECTION_SEPARATOR + ESCAPED_QUOTES + LOG_MESSAGE_TEMPLATE, packageName, className, methodName, threadName)
+                + " + (System.nanoTime() - startTime) " + LOGGER_END;
         return loggerLine;
     }
 }
