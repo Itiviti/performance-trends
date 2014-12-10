@@ -12,7 +12,6 @@ import java.security.ProtectionDomain;
 
 public class DurationTransformer implements ClassFileTransformer
 {
-
     private static final String LOGGER_START         = "com.ullink.duration.logging.FastLogger.getInstance().log(";
     private static final String LOGGER_END           = ");";
     private static final String ESCAPED_QUOTES       = "\"";
@@ -24,7 +23,7 @@ public class DurationTransformer implements ClassFileTransformer
      * e.g. SMART: com.ullink.ulbridge2.modules.bee
      * e.g. both EDMA and SMART: com.ullink.ulbridge
      */
-    private static final String HARD_CODED_PACKAGE_TO_PROFILE = "com.ullink";
+    private static final String HARD_CODED_PACKAGE_TO_PROFILE = "com.ullink.ulbridge";
 
     public byte[] transform(ClassLoader loader, String className,
         Class classBeingRedefined, ProtectionDomain protectionDomain,
@@ -45,9 +44,12 @@ public class DurationTransformer implements ClassFileTransformer
                 System.err.println("Exception while transforming class (using thus original bytecode): " + className + ", exception is: " + e);
             }
         }
-        if (instrumentedBytes != null) {
+        if (instrumentedBytes != null)
+        {
             return instrumentedBytes;
-        } else {
+        }
+        else
+        {
             return classFileBuffer;
         }
     }
@@ -99,10 +101,11 @@ public class DurationTransformer implements ClassFileTransformer
     {
         /* TODO: get the thread name of the instrumented class, this currently takes the name of the classloader thread  */
         String threadName = Thread.currentThread().getName();
+
         /* TODO: refactor this whole thing using String formatter. Take into consideration tha the same log-formatter will also be used by interceptors! */
-        String loggerLine =
+        /*@Language("JAVA")*/ String loggerLine =
             String.format(LOGGER_START + "System.currentTimeMillis() + " + ESCAPED_QUOTES + PerformanceTrendLogFormatter.LOG_SECTION_SEPARATOR + ESCAPED_QUOTES + LOG_MESSAGE_TEMPLATE, packageName, className, methodName, threadName)
-                + " + (System.nanoTime() - startTime) " + LOGGER_END;
+                + " + java.util.concurrent.TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - startTime) " + LOGGER_END;
         return loggerLine;
     }
 }

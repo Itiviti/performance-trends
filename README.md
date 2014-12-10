@@ -13,6 +13,12 @@
 ant test -Dtest.jvmarg="-javaagent:d:\\Data\\Code\\performance-trends\\profiler-agent\\build\\libs\\profiler-agent-1.0-SNAPSHOT.jar=d:\\Data\\method-selection.properties,d:\\logs,SMART"
 ```
 
+Example linux version:
+
+```
+ant test -Dtest.jvmarg="-javaagent:/data/code/performance-trends/profiler-agent/build/libs/profiler-agent-1.0-SNAPSHOT.jar=/data/method-selection.properties,/data/logs,SMART"
+```
+
 Note: first agent arg is the path to method selector properties file, the second in the desired output location (optional, default to java temp dir), the 3rd is a tag (optional)
 
 
@@ -37,6 +43,18 @@ def isProfilingEnabled(){
 and then running the build like in the below example:
 
  `gradlew clean build -PdoProfile`
+
+
+ Example linux version:
+
+```
+    if (isProfilingEnabled()) {
+        test {
+            jvmArgs '-javaagent:/data/code/performance-trends/profiler-agent//build/libs/profiler-agent-1.0-SNAPSHOT.jar=/data/method-selection.properties,/data/logs,EDMA'
+        }
+    }
+```
+
 
 # Where to look for the log files?
 
