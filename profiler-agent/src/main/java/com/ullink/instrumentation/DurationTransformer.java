@@ -91,6 +91,7 @@ public class DurationTransformer implements ClassFileTransformer
                     for (CtClass param : method.getParameterTypes()) {
                         methodParams +=  param.getName() + ",";
                     }
+                    methodParams = methodName.substring(0,methodParams.length()-1);
                     String profilerLogging = PerformanceTrendLogFormatter.getLogLine(CURRENT_TIME_MILLIS, packageName, className, methodName, THREAD_NAME, DURATION, methodParams, tag);
                     method.insertAfter(profilerLogging);
                     isInstrumented = true;
