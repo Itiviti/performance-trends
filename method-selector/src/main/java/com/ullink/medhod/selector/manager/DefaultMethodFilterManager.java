@@ -35,8 +35,8 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
     @Override
     public boolean isPackageAllowed(String packageName)
     {
-        FilterEntry closestWhiteEntry = getClosestPackageEntry(packageName, this.whiteList);
-        FilterEntry closestBlackEntry = getClosestPackageEntry(packageName, this.blackList);
+        final FilterEntry closestWhiteEntry = getClosestPackageEntry(packageName, this.whiteList);
+        final FilterEntry closestBlackEntry = getClosestPackageEntry(packageName, this.blackList);
 
         final int closestWhitePathLength = closestWhiteEntry == null ? 0 : getPackageSize(closestWhiteEntry.getPackageName());
         final int closestBlackPathLength = closestBlackEntry == null ? 0 : getPackageSize(closestBlackEntry.getPackageName());
@@ -63,12 +63,22 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
     @Override
     public boolean isClasssAllowed(String packageName, String className)
     {
-        return false;
+        if(!isPackageAllowed(packageName))
+        {
+            return false;
+        }
+        final FilterEntry classBlackEntry = getEntryWithSamePackageNameAndClassName(packageName, className, this.blackList);
+        return classBlackEntry == null;
     }
 
     @Override
     public boolean isMethodAllowed(String packageName, String className, String metodName)
     {
+        if(!isClasssAllowed(packageName, className))
+        {
+            return false;
+        }
+       
         return false;
     }
 
@@ -82,6 +92,12 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
             {
                 return filterEntry;
             }
+            
+            if(filterEntry.getClassName() != null && !filterEntry.getClassName().isEmpty())
+            {
+                //skip class dedicated entries
+                continue;
+            }
             if (packageName.startsWith(entryPackageName) && entryPackageName.length() < packageName.length())
             {
                 if (closestEntry == null || getPackageSize(entryPackageName) > getPackageSize(closestEntry.getPackageName()))
@@ -93,6 +109,18 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
         }
         return closestEntry;
     }
+    
+    private static FilterEntry getEntryWithSamePackageNameAndClassName(final String packageName, final String className, final Collection<FilterEntry> filterEntries)
+    {       
+        for (final FilterEntry filterEntry : filterEntries)
+        {
+            if(packageName.equals(filterEntry.getPackageName()) && className.equals(filterEntry.getClassName()))
+            {
+                return filterEntry;
+            }
+        }
+        return null;
+    }
 
     private static int getPackageSize(final String entryPackageName)
     {
@@ -101,7 +129,6 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
             return 0;
         }
         return entryPackageName.length();
-
     }
 
 }

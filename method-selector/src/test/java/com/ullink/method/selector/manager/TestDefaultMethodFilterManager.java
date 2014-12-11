@@ -23,19 +23,34 @@ public class TestDefaultMethodFilterManager
     @Test
     public void accceptPackages()
     {
-        Assert.assertTrue(this.methodFilterManager.isPackageAllowed("A.B.C"));
-        Assert.assertTrue(this.methodFilterManager.isPackageAllowed("A.B.C.D"));
-        Assert.assertFalse(this.methodFilterManager.isPackageAllowed("A.B.C.E"));
+        Assert.assertTrue(this.methodFilterManager.isPackageAllowed("com.ullink.performance-trends"));
+        Assert.assertTrue(this.methodFilterManager.isPackageAllowed("com.ullink.performance-trends.visible"));
+        Assert.assertFalse(this.methodFilterManager.isPackageAllowed("com.ullink.performance-trends.hidden"));
     }
-    
+
     @Test
     public void accceptSubPackages()
     {
-        Assert.assertTrue(this.methodFilterManager.isPackageAllowed("A.B.C.D.X"));
-        Assert.assertFalse(this.methodFilterManager.isPackageAllowed("A.B.C.E.X"));
+        Assert.assertTrue(this.methodFilterManager.isPackageAllowed("com.ullink.performance-trends.visible.random"));
+        Assert.assertFalse(this.methodFilterManager.isPackageAllowed("com.ullink.performance-trends.hidden.random"));
     }
     
-    public void acceptClasses(){
-        
+    @Test
+    public void classesWithHiddenPackage_areHidden()
+    {
+        Assert.assertFalse(this.methodFilterManager.isClasssAllowed("com.ullink.performance-trends.hidden", "RandomClass1"));
+        Assert.assertFalse(this.methodFilterManager.isClasssAllowed("com.ullink.performance-trends.hidden", "RandomClass2"));
+    }
+    
+    @Test
+    public void classesWithVisiblePackageAndNotVisible_areHidden()
+    {
+        Assert.assertTrue(this.methodFilterManager.isClasssAllowed("com.ullink.performance-trends.visible", "RandomClass"));
+        Assert.assertFalse(this.methodFilterManager.isClasssAllowed("com.ullink.performance-trends.hidden", "HiddenClass"));
+    }
+
+    public void acceptClasses()
+    {
+
     }
 }
