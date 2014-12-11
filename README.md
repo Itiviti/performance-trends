@@ -67,6 +67,12 @@ and then running the build like in the below example:
 
  rm -rf *.index && find . -type f -name '\*.data' -exec grep -a '`' {} \; > merged.log && rm -rf *.data
 
+ and then manually copy the resulted *.log file in the logstash input folder (...performance-trends-visualizer/loginput/)
+
+ An automated option is to adapt the input/output folders from `performance-trends/fast-logger/src/main/sh/data_file_compacter.sh`
+ and just run it every time you need to compact data files. This script also copies the resulted merged file in the logstash input directory.
+ There is even an IDEA plugin for shell script which allow running it from IDEA. On windows you can use the Git bash.
+
 # Markdown?
 
 This file is a markdown file. For formatting tips check [Markdown cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)

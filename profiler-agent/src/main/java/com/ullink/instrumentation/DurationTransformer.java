@@ -23,7 +23,7 @@ public class DurationTransformer implements ClassFileTransformer
      * e.g. SMART: com.ullink.ulbridge2.modules.bee
      * e.g. both EDMA and SMART: com.ullink.ulbridge
      */
-    private static final String HARD_CODED_PACKAGE_TO_PROFILE = "com.ullink.ulbridge";
+    private static final String HARD_CODED_PACKAGE_TO_PROFILE = "com.ullink";
 
     public byte[] transform(ClassLoader loader, String className,
         Class classBeingRedefined, ProtectionDomain protectionDomain,
