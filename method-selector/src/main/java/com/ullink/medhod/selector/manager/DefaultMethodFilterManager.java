@@ -35,6 +35,28 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
     @Override
     public boolean isPackageAllowed(String packageName)
     {
+        FilterEntry closestWhiteEntry = getClosestPackageEntry(packageName, this.whiteList);
+        FilterEntry closestBlackEntry = getClosestPackageEntry(packageName, this.blackList);
+
+        final int closestWhitePathLength = closestWhiteEntry == null ? 0 : getPackageSize(closestWhiteEntry.getPackageName());
+        final int closestBlackPathLength = closestBlackEntry == null ? 0 : getPackageSize(closestBlackEntry.getPackageName());
+
+        if (closestWhitePathLength == 0)
+        {
+            return false;
+        }
+        else if (closestBlackPathLength == 0)
+        {
+            return true;
+        }
+        if (closestWhitePathLength == packageName.length())
+        {
+            return true;
+        }
+        else if (closestBlackPathLength == packageName.length())
+        {
+            return false;
+        }
         return false;
     }
 
@@ -50,6 +72,36 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
         return false;
     }
 
+    private static FilterEntry getClosestPackageEntry(final String packageName, final Collection<FilterEntry> filterEntries)
+    {
+        FilterEntry closestEntry = null;
+        for (final FilterEntry filterEntry : filterEntries)
+        {
+            final String entryPackageName = filterEntry.getPackageName();
+            if (entryPackageName.equals(packageName))
+            {
+                return filterEntry;
+            }
+            if (packageName.startsWith(entryPackageName) && entryPackageName.length() < packageName.length())
+            {
+                if (closestEntry == null || getPackageSize(entryPackageName) > getPackageSize(closestEntry.getPackageName()))
+                {
+                    closestEntry = filterEntry;
+                }
+            }
 
+        }
+        return closestEntry;
+    }
+
+    private static int getPackageSize(final String entryPackageName)
+    {
+        if (entryPackageName == null)
+        {
+            return 0;
+        }
+        return entryPackageName.length();
+
+    }
 
 }
