@@ -8,6 +8,7 @@ public class AgentTester
         for (int counter = 0; counter < 100; counter++)
         {
             new SampleBean().sampleMethod();
+            new SampleBean().sampleMethod("arg1", 2);
         }
     }
 }
