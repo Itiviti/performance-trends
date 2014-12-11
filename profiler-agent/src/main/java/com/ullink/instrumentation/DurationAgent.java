@@ -1,7 +1,8 @@
 package com.ullink.instrumentation;
 
 import com.ullink.duration.logging.FastLogger;
-
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 
 public class DurationAgent
@@ -19,9 +20,15 @@ public class DurationAgent
          * - third arg is a tag we can use to filter the measurements (e.g. filter results per EDMA, per SMART, per MONITORING etc)
          */
         String tag = null;
+        String csvFilePath = null;
         if (agentArgs != null)
         {
             String[] args = agentArgs.split(",");
+            
+            if(args.length >=1)
+            {
+                csvFilePath=args[0];
+            }
             if (args.length >= 2) {
                 String durationLogsPath = args[1];
                 FastLogger.initLogPath(durationLogsPath);
@@ -31,9 +38,21 @@ public class DurationAgent
             {
                 tag = args[2];
             }
+            
 
         }
 
-        inst.addTransformer(new DurationTransformer(tag));
+        try
+        {
+            inst.addTransformer(new DurationTransformer(csvFilePath, tag));
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

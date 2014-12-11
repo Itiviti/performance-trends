@@ -1,33 +1,36 @@
 package com.ullink.instrumentation;
 
 import com.ullink.duration.logging.FastLogger;
+import com.ullink.method.selector.manager.MethodFilterManager;
+import com.ullink.method.selector.manager.file.CSVFilterManagerBuilder;
 import com.ullink.performance.log.fomat.PerformanceTrendLogFormatter;
 import javassist.*;
-
 import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
-
 import static com.ullink.performance.log.fomat.PerformanceTrendLogFormatter.*;
 
 public class DurationTransformer implements ClassFileTransformer
 {
-   /**
+    /**
      * e.g. EDMA: com.ullink.ulbridge.plugins
      * e.g. only main EDMA entry class and classes from the same package: com.ullink.ulbridge.plugins.edma
      * e.g. SMART: com.ullink.ulbridge2.modules.bee
      * e.g. both EDMA and SMART: com.ullink.ulbridge
      */
-    private static final String HARD_CODED_PACKAGE_TO_PROFILE = "com.ullink";
-    private static final String START_TIME_VAR_NAME = "PT_$tArTtImE";
-    private static final String CURRENT_TIME_MILLIS = ESCAPED_QUOTES + " + System.currentTimeMillis() + " + ESCAPED_QUOTES;
-    private static final String THREAD_NAME = ESCAPED_QUOTES + " + Thread.currentThread().getName() + "  + ESCAPED_QUOTES;
-    private static final String DURATION = ESCAPED_QUOTES + " + java.util.concurrent.TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - " + START_TIME_VAR_NAME + ") + " + ESCAPED_QUOTES;
-    private final String tag;
+    private static final String START_TIME_VAR_NAME           = "PT_$tArTtImE";
+    private static final String CURRENT_TIME_MILLIS           = ESCAPED_QUOTES + " + System.currentTimeMillis() + " + ESCAPED_QUOTES;
+    private static final String THREAD_NAME                   = ESCAPED_QUOTES + " + Thread.currentThread().getName() + " + ESCAPED_QUOTES;
+    private static final String DURATION                      = ESCAPED_QUOTES + " + java.util.concurrent.TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - " + START_TIME_VAR_NAME + ") + " + ESCAPED_QUOTES;
+    private final String        tag;
 
-    public DurationTransformer(String tag) {
+    private MethodFilterManager methodFilterManager;
+
+    public DurationTransformer(String csvFilePath, String tag) throws FileNotFoundException, IOException
+    {
         if (tag != null)
         {
             this.tag = tag;
@@ -36,11 +39,17 @@ public class DurationTransformer implements ClassFileTransformer
         {
             this.tag = "NOTAG";
         }
+        if (csvFilePath != null)
+        {
+            this.methodFilterManager = CSVFilterManagerBuilder.fromFileName(csvFilePath).build();
+        }
+        else
+        {
+            this.methodFilterManager = null;
+        }
     }
 
-    public byte[] transform(ClassLoader loader, String className,
-        Class classBeingRedefined, ProtectionDomain protectionDomain,
-        byte[] classFileBuffer) throws IllegalClassFormatException
+    public byte[] transform(ClassLoader loader, String className, Class classBeingRedefined, ProtectionDomain protectionDomain, byte[] classFileBuffer) throws IllegalClassFormatException
     {
 
         byte[] instrumentedBytes = null;
@@ -88,8 +97,9 @@ public class DurationTransformer implements ClassFileTransformer
                 {
                     method.addLocalVariable(START_TIME_VAR_NAME, CtClass.longType);
                     method.insertBefore(START_TIME_VAR_NAME + " = System.nanoTime();");
-                    for (CtClass param : method.getParameterTypes()) {
-                        methodParams +=  param.getName() + ",";
+                    for (CtClass param : method.getParameterTypes())
+                    {
+                        methodParams += param.getName() + ",";
                     }
                     methodParams = methodParams.substring(0,methodParams.length()-1);
                     String profilerLogging = PerformanceTrendLogFormatter.getLogLine(CURRENT_TIME_MILLIS, packageName, className, methodName, THREAD_NAME, DURATION, methodParams, tag);
@@ -112,6 +122,11 @@ public class DurationTransformer implements ClassFileTransformer
 
     private boolean isInstrumentationEnabledForMethod(String packageName, String className, String methodName)
     {
-        return packageName.startsWith(HARD_CODED_PACKAGE_TO_PROFILE);
+        if (methodFilterManager == null)
+        {
+            return true;
+        }
+        return methodFilterManager.isMethodAllowed(packageName, className, methodName);
     }
+
 }
