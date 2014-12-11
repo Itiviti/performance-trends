@@ -1,13 +1,13 @@
-package com.ullink.medhod.selector.manager.file;
+package com.ullink.method.selector.manager.file;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
-import com.ullink.medhod.selector.manager.DefaultMethodFilterManager;
-import com.ullink.medhod.selector.manager.MethodFilterManager;
-import com.ullink.medhod.selector.manager.file.reader.FileReader;
-import com.ullink.medhod.selector.model.FilterEntry;
+import com.ullink.method.selector.manager.DefaultMethodFilterManager;
+import com.ullink.method.selector.manager.MethodFilterManager;
+import com.ullink.method.selector.manager.file.reader.FileReader;
+import com.ullink.method.selector.model.FilterEntry;
 
 abstract class BaseFileFilterManagerBuilder
 {

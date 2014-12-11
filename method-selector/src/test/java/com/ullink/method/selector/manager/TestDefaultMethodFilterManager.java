@@ -6,8 +6,8 @@ import java.net.URL;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import com.ullink.medhod.selector.manager.MethodFilterManager;
-import com.ullink.medhod.selector.manager.file.CSVFilterManagerBuilder;
+import com.ullink.method.selector.manager.MethodFilterManager;
+import com.ullink.method.selector.manager.file.CSVFilterManagerBuilder;
 
 public class TestDefaultMethodFilterManager
 {

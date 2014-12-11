@@ -1,4 +1,4 @@
-package com.ullink.medhod.selector.manager;
+package com.ullink.method.selector.manager;
 public interface MethodFilterManager
 {
     boolean isPackageAllowed(String packageName);

@@ -1,7 +1,7 @@
-package com.ullink.medhod.selector.manager.file;
+package com.ullink.method.selector.manager.file;
 
 import java.io.File;
-import com.ullink.medhod.selector.manager.file.reader.CSVFileReader;
+import com.ullink.method.selector.manager.file.reader.CSVFileReader;
 
 public class CSVFilterManagerBuilder extends BaseFileFilterManagerBuilder
 {

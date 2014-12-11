@@ -1,9 +1,9 @@
-package com.ullink.medhod.selector.manager;
+package com.ullink.method.selector.manager;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import com.ullink.medhod.selector.model.FilterEntry;
+import com.ullink.method.selector.model.FilterEntry;
 
 public final class DefaultMethodFilterManager implements MethodFilterManager
 {

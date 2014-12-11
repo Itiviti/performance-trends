@@ -1,11 +1,11 @@
-package com.ullink.medhod.selector.manager.file.reader;
+package com.ullink.method.selector.manager.file.reader;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import com.ullink.medhod.selector.model.FilterEntry;
+import com.ullink.method.selector.model.FilterEntry;
 import com.ullink.method.selector.util.FileUtil;
 
 class FileReaderAdapter implements FileReader

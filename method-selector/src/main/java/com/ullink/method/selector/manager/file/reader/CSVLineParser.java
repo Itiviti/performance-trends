@@ -1,6 +1,6 @@
-package com.ullink.medhod.selector.manager.file.reader;
+package com.ullink.method.selector.manager.file.reader;
 
-import com.ullink.medhod.selector.model.FilterEntry;
+import com.ullink.method.selector.model.FilterEntry;
 
 final class CSVLineParser extends LineParser
 {

@@ -1,4 +1,4 @@
-package com.ullink.medhod.selector.manager.file.reader;
+package com.ullink.method.selector.manager.file.reader;
 
 public class CSVFileReader extends  FileReaderAdapter
 {

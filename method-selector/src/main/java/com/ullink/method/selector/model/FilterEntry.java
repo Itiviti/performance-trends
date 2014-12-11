@@ -1,4 +1,4 @@
-package com.ullink.medhod.selector.model;
+package com.ullink.method.selector.model;
 
 public class FilterEntry
 {
