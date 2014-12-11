@@ -26,6 +26,18 @@ public class DurationTransformer implements ClassFileTransformer
      */
     private static final String HARD_CODED_PACKAGE_TO_PROFILE = "com.ullink";
     private static final String START_TIME_VAR_NAME = "PT_$tArTtImE";
+    private final String tag;
+
+    public DurationTransformer(String tag) {
+        if (tag != null)
+        {
+            this.tag = tag;
+        }
+        else
+        {
+            this.tag = "NOTAG";
+        }
+    }
 
     public byte[] transform(ClassLoader loader, String className,
         Class classBeingRedefined, ProtectionDomain protectionDomain,
@@ -107,8 +119,9 @@ public class DurationTransformer implements ClassFileTransformer
             "System.currentTimeMillis() + " + ESCAPED_SEPARATOR +
             LOG_MESSAGE_TEMPLATE +
             " + Thread.currentThread().getName() + " + ESCAPED_SEPARATOR +
-            " + java.util.concurrent.TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - " + START_TIME_VAR_NAME + ") " +
+            " + java.util.concurrent.TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - " + START_TIME_VAR_NAME + ") + " + ESCAPED_SEPARATOR +
+            " + " + ESCAPED_QUOTES+ "%s" + ESCAPED_QUOTES +
             LOGGER_END,
-            packageName, className, methodName);
+            packageName, className, methodName, tag);
     }
 }
