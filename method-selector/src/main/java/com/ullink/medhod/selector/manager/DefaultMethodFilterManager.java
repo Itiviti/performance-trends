@@ -9,6 +9,7 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
 {
     private final List<FilterEntry> whiteList;
     private final List<FilterEntry> blackList;
+    private static final String ALL_WILDCARD ="*";
 
     public DefaultMethodFilterManager(final Collection<FilterEntry> entries)
     {
@@ -99,10 +100,9 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
                 return filterEntry;
             }
 
-           
-            if (packageName.startsWith(entryPackageName) && entryPackageName.length() < packageName.length())
+            if (isPackageParentOf(packageName, entryPackageName))
             {
-                if (closestEntry == null || getPackageSize(entryPackageName) > getPackageSize(closestEntry.getPackageName()))
+                if (closestEntry == null ||  getPackageSize(entryPackageName) > getPackageSize(closestEntry.getPackageName()))
                 {
                     closestEntry = filterEntry;
                 }
@@ -111,6 +111,16 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
         }
         return closestEntry;
     }
+    
+    private static boolean isPackageParentOf(final String parent, final String child)
+    {
+        if(ALL_WILDCARD.equals(parent))
+        {
+            return true;
+        }
+        return parent.startsWith(child) && child.length() < parent.length();
+    }
+     
 
     private static FilterEntry getEntryWithSamePackageNameAndClassName(final String packageName, final String className, final Collection<FilterEntry> filterEntries)
     {
@@ -121,7 +131,7 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
             {
                 continue;
             }
-            if (packageName.equals(filterEntry.getPackageName()) && className.equals(filterEntry.getClassName()))
+            if (matchName(packageName, filterEntry.getPackageName())  && matchName(className, filterEntry.getClassName()))
             {
                 return filterEntry;
             }
@@ -133,7 +143,7 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
     {
         for (final FilterEntry filterEntry : filterEntries)
         {
-            if (packageName.equals(filterEntry.getPackageName()) && className.equals(filterEntry.getClassName()) && methodName.equals(filterEntry.getMethodName()))
+            if (matchName(packageName, filterEntry.getPackageName())  && matchName(className, filterEntry.getClassName()) && matchName(methodName, filterEntry.getMethodName()))
             {
                 return filterEntry;
             }
@@ -141,6 +151,13 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
         return null;
     }
     
+    private static boolean matchName(final String matcher, final String toMatch)
+
+    {
+        return ALL_WILDCARD.equals(toMatch) || matcher.equals(toMatch); 
+    }
+    
+   
     /**
      * Gets the size of the package.
      * @param entryPackageName

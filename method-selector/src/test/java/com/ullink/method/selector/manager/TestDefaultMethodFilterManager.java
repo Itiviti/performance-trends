@@ -50,6 +50,16 @@ public class TestDefaultMethodFilterManager
         Assert.assertFalse(this.methodFilterManager.isClasssAllowed("com.ullink.performance-trends.visible", "HiddenClass"));
     }
     
+    
+    @Test
+    public void classesWithPackageWildCard_AreHidden()
+    {
+        Assert.assertFalse(this.methodFilterManager.isClasssAllowed("com.ullink.performance-trends.package1", "WildCardHiddenClass"));
+        Assert.assertFalse(this.methodFilterManager.isClasssAllowed("com.ullink.performance-trends.package2", "WildCardHiddenClass"));
+        Assert.assertFalse(this.methodFilterManager.isClasssAllowed("com.ullink.performance-trends.visible", "WildCardHiddenClass"));
+        Assert.assertFalse(this.methodFilterManager.isClasssAllowed("root", "WildCardHiddenClass"));
+    }
+    
     @Test
     public void methodsWithHiddenPackage_areHidden()
     {
@@ -68,5 +78,22 @@ public class TestDefaultMethodFilterManager
         Assert.assertTrue(this.methodFilterManager.isMethodAllowed("com.ullink.performance-trends.visible", "VisibleClass", "randomMethod"));
         Assert.assertFalse(this.methodFilterManager.isMethodAllowed("com.ullink.performance-trends.visible", "VisibleClass", "hiddenMethod"));
     }
- 
+    @Test
+    public void methodsWithPackageAndClassWildCard_AreHidden()
+    {
+        Assert.assertFalse(this.methodFilterManager.isMethodAllowed("com.ullink.performance-trends.package", "RandomClass1", "wildCardHiddenMethod"));
+        Assert.assertFalse(this.methodFilterManager.isMethodAllowed("com.ullink.performance-trends.package", "RandomClass2", "wildCardHiddenMethod"));
+        Assert.assertFalse(this.methodFilterManager.isMethodAllowed("com.ullink.performance-trends.visible", "RandomClass", "wildCardHiddenMethod"));
+        Assert.assertFalse(this.methodFilterManager.isMethodAllowed("root", "RandomClass", "wildCardHiddenMethod"));
+    }
+    
+    @Test
+    public void methodsWithPackagAndClassWildCard_AreHidden()
+    {
+        Assert.assertFalse(this.methodFilterManager.isMethodAllowed("com.ullink.performance-trends.visible", "RandomClass1", "methodHiddenInPackage"));
+        Assert.assertFalse(this.methodFilterManager.isMethodAllowed("com.ullink.performance-trends.visible", "RandomClass2", "methodHiddenInPackage"));
+        Assert.assertTrue(this.methodFilterManager.isMethodAllowed("com.ullink.performance-trends.visible", "RandomClass1", "methodShownInPackage"));
+        Assert.assertTrue(this.methodFilterManager.isMethodAllowed("com.ullink.performance-trends.visible", "RandomClass2", "methodShownInPackage"));
+       
+    } 
 }
