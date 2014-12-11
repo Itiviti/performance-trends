@@ -16,7 +16,7 @@ public class TestDefaultMethodFilterManager
     @Before
     public void setUp() throws FileNotFoundException, IOException
     {
-        URL csvURl = TestDefaultMethodFilterManager.class.getResource("resources/rules.csv");
+        URL csvURl = Thread.currentThread().getContextClassLoader().getResource("rules.csv");
         this.methodFilterManager = CSVFilterManagerBuilder.fromFileName(csvURl.getFile()).build();
     }
 
