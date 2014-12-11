@@ -25,6 +25,7 @@ public class DurationTransformer implements ClassFileTransformer
      * e.g. both EDMA and SMART: com.ullink.ulbridge
      */
     private static final String HARD_CODED_PACKAGE_TO_PROFILE = "com.ullink";
+    private static final String START_TIME_VAR_NAME = "PT_$tArTtImE";
 
     public byte[] transform(ClassLoader loader, String className,
         Class classBeingRedefined, ProtectionDomain protectionDomain,
@@ -73,8 +74,8 @@ public class DurationTransformer implements ClassFileTransformer
                 /* TODO use method-selector utilities instead of this method! */
                 if (isInstrumentationEnabledForMethod(packageName, className, methodName))
                 {
-                    method.addLocalVariable("PT_$tArTtImE", CtClass.longType);
-                    method.insertBefore("PT_$tArTtImE = System.nanoTime();");
+                    method.addLocalVariable(START_TIME_VAR_NAME, CtClass.longType);
+                    method.insertBefore(START_TIME_VAR_NAME + " = System.nanoTime();");
                     String profilerLogging = createDurationLogLine(packageName, className, methodName);
                     method.insertAfter(profilerLogging);
                     isInstrumented = true;
@@ -106,7 +107,7 @@ public class DurationTransformer implements ClassFileTransformer
             "System.currentTimeMillis() + " + ESCAPED_SEPARATOR +
             LOG_MESSAGE_TEMPLATE +
             " + Thread.currentThread().getName() + " + ESCAPED_SEPARATOR +
-            " + java.util.concurrent.TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - PT_$tArTtImE) " +
+            " + java.util.concurrent.TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - " + START_TIME_VAR_NAME + ") " +
             LOGGER_END,
             packageName, className, methodName);
     }
