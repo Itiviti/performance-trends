@@ -23,7 +23,7 @@ if [ $numberOfInputFiles -gt 0 ]; then
   echo "And it ends like this:"
   tail -n 1 $INPUT_DIR/$outputFileName
 
-  echo "Moving file to logstah input folder: $OUTPUT_DIR/$outputFileName"
+  echo "Moving file to logstash input folder: $OUTPUT_DIR/$outputFileName"
 
   rm -rf $INPUT_DIR/$ORIGINAL_FILE_EXTENSION
   mv $INPUT_DIR/$outputFileName  $OUTPUT_DIR/$outputFileName
