@@ -46,6 +46,7 @@ public class TestDefaultMethodFilterManager
     public void classesWithVisiblePackageAndNotVisible_areHidden()
     {
         Assert.assertTrue(this.methodFilterManager.isClasssAllowed("com.ullink.performance-trends.visible", "RandomClass"));
+        Assert.assertTrue(this.methodFilterManager.isClasssAllowed("com.ullink.performance-trends.visible", "VisibleClass"));
         Assert.assertFalse(this.methodFilterManager.isClasssAllowed("com.ullink.performance-trends.visible", "HiddenClass"));
     }
     
@@ -59,6 +60,13 @@ public class TestDefaultMethodFilterManager
     public void methodsWithHiddenClass_areHidden()
     {
         Assert.assertFalse(this.methodFilterManager.isMethodAllowed("com.ullink.performance-trends.visible", "HiddenClass", "randomMethod"));
+    }
+    
+    @Test
+    public void methodsWithVisibleClassAndNotVisile_areHidden()
+    {
+        Assert.assertTrue(this.methodFilterManager.isMethodAllowed("com.ullink.performance-trends.visible", "VisibleClass", "randomMethod"));
+        Assert.assertFalse(this.methodFilterManager.isMethodAllowed("com.ullink.performance-trends.visible", "VisibleClass", "hiddenMethod"));
     }
  
 }

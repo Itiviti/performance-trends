@@ -63,7 +63,7 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
     @Override
     public boolean isClasssAllowed(String packageName, String className)
     {
-        if(!isPackageAllowed(packageName))
+        if (!isPackageAllowed(packageName))
         {
             return false;
         }
@@ -74,12 +74,12 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
     @Override
     public boolean isMethodAllowed(String packageName, String className, String metodName)
     {
-        if(!isClasssAllowed(packageName, className))
+        if (!isClasssAllowed(packageName, className))
         {
             return false;
         }
-       
-        return false;
+        final FilterEntry methodBlackEntry = getEntryWithSamePackageNameClassNameAndMethodName(packageName, className, metodName, this.blackList);
+        return methodBlackEntry == null;
     }
 
     private static FilterEntry getClosestPackageEntry(final String packageName, final Collection<FilterEntry> filterEntries)
@@ -87,17 +87,19 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
         FilterEntry closestEntry = null;
         for (final FilterEntry filterEntry : filterEntries)
         {
+            if (filterEntry.getClassName() != null && !filterEntry.getClassName().isEmpty())
+            {
+                // skip class dedicated entries
+                continue;
+            }
+            
             final String entryPackageName = filterEntry.getPackageName();
             if (entryPackageName.equals(packageName))
             {
                 return filterEntry;
             }
-            
-            if(filterEntry.getClassName() != null && !filterEntry.getClassName().isEmpty())
-            {
-                //skip class dedicated entries
-                continue;
-            }
+
+           
             if (packageName.startsWith(entryPackageName) && entryPackageName.length() < packageName.length())
             {
                 if (closestEntry == null || getPackageSize(entryPackageName) > getPackageSize(closestEntry.getPackageName()))
@@ -109,12 +111,29 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
         }
         return closestEntry;
     }
-    
+
     private static FilterEntry getEntryWithSamePackageNameAndClassName(final String packageName, final String className, final Collection<FilterEntry> filterEntries)
-    {       
+    {
+        for (final FilterEntry filterEntry : filterEntries)
+        {   
+            //skip method dedicated entries
+            if(filterEntry.getMethodName() != null &&  !filterEntry.getMethodName().isEmpty())
+            {
+                continue;
+            }
+            if (packageName.equals(filterEntry.getPackageName()) && className.equals(filterEntry.getClassName()))
+            {
+                return filterEntry;
+            }
+        }
+        return null;
+    }
+
+    private static FilterEntry getEntryWithSamePackageNameClassNameAndMethodName(final String packageName, final String className, final String methodName, final Collection<FilterEntry> filterEntries)
+    {
         for (final FilterEntry filterEntry : filterEntries)
         {
-            if(packageName.equals(filterEntry.getPackageName()) && className.equals(filterEntry.getClassName()))
+            if (packageName.equals(filterEntry.getPackageName()) && className.equals(filterEntry.getClassName()) && methodName.equals(filterEntry.getMethodName()))
             {
                 return filterEntry;
             }
