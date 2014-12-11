@@ -73,8 +73,8 @@ public class DurationTransformer implements ClassFileTransformer
                 /* TODO use method-selector utilities instead of this method! */
                 if (isInstrumentationEnabledForMethod(packageName, className, methodName))
                 {
-                    method.addLocalVariable("startTime", CtClass.longType);  // TODO find a more unique name!
-                    method.insertBefore("startTime = System.nanoTime();");
+                    method.addLocalVariable("PT_$tArTtImE", CtClass.longType);
+                    method.insertBefore("PT_$tArTtImE = System.nanoTime();");
                     String profilerLogging = createDurationLogLine(packageName, className, methodName);
                     method.insertAfter(profilerLogging);
                     isInstrumented = true;
