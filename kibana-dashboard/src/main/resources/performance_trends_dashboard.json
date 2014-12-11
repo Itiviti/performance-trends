@@ -229,7 +229,7 @@
               0
             ]
           },
-          "field": "pt_duration_nanos",
+          "field": "pt_duration_micros",
           "exclude": [],
           "missing": true,
           "other": true,
@@ -257,7 +257,7 @@
           "loadingEditor": false,
           "mode": "mean",
           "time_field": "pt_date_epoch",
-          "value_field": "pt_duration_nanos",
+          "value_field": "pt_duration_micros",
           "x-axis": true,
           "y-axis": true,
           "scale": "1",
@@ -330,7 +330,7 @@
           "loadingEditor": false,
           "mode": "max",
           "time_field": "pt_date_epoch",
-          "value_field": "pt_duration_nanos",
+          "value_field": "pt_duration_micros",
           "x-axis": true,
           "y-axis": true,
           "scale": "1",
@@ -403,7 +403,7 @@
           "loadingEditor": false,
           "mode": "min",
           "time_field": "pt_date_epoch",
-          "value_field": "pt_duration_nanos",
+          "value_field": "pt_duration_micros",
           "x-axis": true,
           "y-axis": true,
           "scale": "1",
@@ -557,14 +557,14 @@
       "history": [
         "*",
         "pt_class:AbstractRule",
-        "pt_duration_nanos:[800 TO 10000]",
-        "pt_duration_nanos:[400 TO 800]",
-        "pt_duration_nanos:[8000 TO 10000]",
-        "pt_duration_nanos:[0 TO 100]",
-        "pt_duration_nanos:[8000 TO 1000]",
+        "pt_duration_micros:[800 TO 10000]",
+        "pt_duration_micros:[400 TO 800]",
+        "pt_duration_micros:[8000 TO 10000]",
+        "pt_duration_micros:[0 TO 100]",
+        "pt_duration_micros:[8000 TO 1000]",
         "pt_method:run",
-        "pt_duration_nanos:[400 TO 1000]",
-        "pt_duration_nanos:[200 TO 400]"
+        "pt_duration_micros:[400 TO 1000]",
+        "pt_duration_micros:[200 TO 400]"
       ],
       "remember": 10,
       "enable": true
