@@ -15,7 +15,8 @@ public class DurationTransformer implements ClassFileTransformer
     private static final String LOGGER_START         = "com.ullink.duration.logging.FastLogger.getInstance().log(";
     private static final String LOGGER_END           = ");";
     private static final String ESCAPED_QUOTES       = "\"";
-    private static final String LOG_MESSAGE_TEMPLATE = ESCAPED_QUOTES + PerformanceTrendLogFormatter.LOG_MESSAGE_FORMAT + ESCAPED_QUOTES;
+    private static final String ESCAPED_SEPARATOR = ESCAPED_QUOTES + PerformanceTrendLogFormatter.LOG_SECTION_SEPARATOR + ESCAPED_QUOTES;
+    private static final String LOG_MESSAGE_TEMPLATE = "+" + ESCAPED_QUOTES + PerformanceTrendLogFormatter.LOG_MESSAGE_FORMAT + ESCAPED_QUOTES;
 
     /**
      * e.g. EDMA: com.ullink.ulbridge.plugins
@@ -99,13 +100,14 @@ public class DurationTransformer implements ClassFileTransformer
 
     private String createDurationLogLine(String packageName, String className, String methodName)
     {
-        /* TODO: get the thread name of the instrumented class, this currently takes the name of the classloader thread  */
-        String threadName = Thread.currentThread().getName();
-
         /* TODO: refactor this whole thing using String formatter. Take into consideration tha the same log-formatter will also be used by interceptors! */
-        /*@Language("JAVA")*/ String loggerLine =
-            String.format(LOGGER_START + "System.currentTimeMillis() + " + ESCAPED_QUOTES + PerformanceTrendLogFormatter.LOG_SECTION_SEPARATOR + ESCAPED_QUOTES + LOG_MESSAGE_TEMPLATE, packageName, className, methodName, threadName)
-                + " + java.util.concurrent.TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - startTime) " + LOGGER_END;
-        return loggerLine;
+        /*@Language("JAVA")*/
+        return String.format(LOGGER_START +
+            "System.currentTimeMillis() + " + ESCAPED_SEPARATOR +
+            LOG_MESSAGE_TEMPLATE +
+            " + Thread.currentThread().getName() + " + ESCAPED_SEPARATOR +
+            " + java.util.concurrent.TimeUnit.NANOSECONDS.toMicros(System.nanoTime() - startTime) " +
+            LOGGER_END,
+            packageName, className, methodName);
     }
 }

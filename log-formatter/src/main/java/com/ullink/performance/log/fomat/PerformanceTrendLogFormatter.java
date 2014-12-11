@@ -8,6 +8,5 @@ public class PerformanceTrendLogFormatter {
     private static final String STRING_PLACEHOLDER = "%s";
     public static final String LOG_MESSAGE_FORMAT = STRING_PLACEHOLDER + LOG_SECTION_SEPARATOR // package
                                                     + STRING_PLACEHOLDER + LOG_SECTION_SEPARATOR // class
-                                                    + STRING_PLACEHOLDER + LOG_SECTION_SEPARATOR // method
-                                                    + STRING_PLACEHOLDER + LOG_SECTION_SEPARATOR; // thread
+                                                    + STRING_PLACEHOLDER + LOG_SECTION_SEPARATOR; // method
 }
