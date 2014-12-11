@@ -140,14 +140,20 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
         }
         return null;
     }
-
+    
+    /**
+     * Gets the size of the package.
+     * @param entryPackageName
+     * @return the number of String delimited by "." + 1
+     * for a.b.c.d -> 4
+     */
     private static int getPackageSize(final String entryPackageName)
     {
         if (entryPackageName == null)
         {
             return 0;
         }
-        return entryPackageName.length();
+        return entryPackageName.replaceAll("[^.]", "").length() + 1;
     }
 
 }
