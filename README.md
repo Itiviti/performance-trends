@@ -83,6 +83,20 @@ and then running the build like in the below example:
  This script also copies the resulted compacted/merged *.log file in the logstash input directory.
  Compacting might need a few minutes (depending on the quantity of logged lines available in the *.data files).
 
+# How to filter watched methods?
+
+Create a csv file with the following structure:
+package-name;class;method;visibility
+
+Example:
+com.ullink.performance-trends;;;true                                    - makes  package visible
+com.ullink.performance-trends.hidden;;;false                            - hides a package
+com.ullink.performance-trends.visible;HiddenClass;;false                - hides a class from a package
+com.ullink.performance-trends.visible;VisibleClass;hiddenMethod;false   - hides a method from a visible class
+*;WildCardHiddenClass;;false                                            - hides all occurrences of the given class
+*;*;wildCardHiddenMethod;false                                          - hides all occurrences of the given method
+
+ 
 # Markdown?
 
 This file is a markdown file. For formatting tips check [Markdown cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
