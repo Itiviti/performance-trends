@@ -77,7 +77,42 @@
       "panels": [
         {
           "error": false,
-          "span": 6,
+          "span": 5,
+          "editable": true,
+          "group": [
+            "default"
+          ],
+          "type": "terms",
+          "queries": {
+            "mode": "all",
+            "ids": [
+              0
+            ]
+          },
+          "field": "pt_tag",
+          "exclude": [],
+          "missing": true,
+          "other": true,
+          "size": 100,
+          "order": "count",
+          "style": {
+            "font-size": "10pt"
+          },
+          "donut": false,
+          "tilt": true,
+          "labels": true,
+          "arrangement": "horizontal",
+          "chart": "pie",
+          "counter_pos": "none",
+          "title": "by tag",
+          "spyable": true,
+          "tmode": "terms",
+          "tstat": "mean",
+          "valuefield": ""
+        },
+        {
+          "error": false,
+          "span": 5,
           "editable": true,
           "group": [
             "default"
@@ -112,7 +147,7 @@
         },
         {
           "error": false,
-          "span": 6,
+          "span": 5,
           "editable": true,
           "group": [
             "default"
@@ -147,7 +182,7 @@
         },
         {
           "error": false,
-          "span": 6,
+          "span": 5,
           "editable": true,
           "group": [
             "default"
@@ -182,7 +217,7 @@
         },
         {
           "error": false,
-          "span": 6,
+          "span": 5,
           "editable": true,
           "group": [
             "default"
@@ -217,7 +252,7 @@
         },
         {
           "error": false,
-          "span": 6,
+          "span": 5,
           "editable": true,
           "group": [
             "default"
@@ -234,7 +269,7 @@
           "missing": true,
           "other": true,
           "size": 100,
-          "order": "count",
+          "order": "term",
           "style": {
             "font-size": "10pt"
           },
@@ -247,7 +282,7 @@
           "title": "by duration",
           "spyable": true,
           "tmode": "terms",
-          "tstat": "total",
+          "tstat": "count",
           "valuefield": ""
         },
         {
@@ -260,7 +295,7 @@
           "value_field": "pt_duration_micros",
           "x-axis": true,
           "y-axis": true,
-          "scale": "1",
+          "scale": 1,
           "y_format": "none",
           "grid": {
             "max": null,
@@ -300,7 +335,7 @@
             "1y"
           ],
           "lines": true,
-          "fill": 0,
+          "fill": 5,
           "linewidth": 3,
           "points": false,
           "pointradius": 5,
@@ -321,7 +356,7 @@
             "value_type": "cumulative",
             "query_as_alias": true
           },
-          "title": "mean duration history"
+          "title": "duration average"
         },
         {
           "span": 12,
@@ -333,7 +368,7 @@
           "value_field": "pt_duration_micros",
           "x-axis": true,
           "y-axis": true,
-          "scale": "1",
+          "scale": 1,
           "y_format": "none",
           "grid": {
             "max": null,
@@ -373,7 +408,7 @@
             "1y"
           ],
           "lines": true,
-          "fill": 0,
+          "fill": 5,
           "linewidth": 3,
           "points": false,
           "pointradius": 5,
@@ -394,7 +429,7 @@
             "value_type": "cumulative",
             "query_as_alias": true
           },
-          "title": "max duration history"
+          "title": "duration max"
         },
         {
           "span": 12,
@@ -406,7 +441,7 @@
           "value_field": "pt_duration_micros",
           "x-axis": true,
           "y-axis": true,
-          "scale": "1",
+          "scale": 1,
           "y_format": "none",
           "grid": {
             "max": null,
@@ -467,7 +502,7 @@
             "value_type": "cumulative",
             "query_as_alias": true
           },
-          "title": "min duration history"
+          "title": "duration min"
         }
       ],
       "notice": false
@@ -556,15 +591,15 @@
       "pinned": true,
       "history": [
         "*",
-        "pt_class:AbstractRule",
-        "pt_duration_micros:[800 TO 10000]",
-        "pt_duration_micros:[400 TO 800]",
-        "pt_duration_micros:[8000 TO 10000]",
-        "pt_duration_micros:[0 TO 100]",
-        "pt_duration_micros:[8000 TO 1000]",
-        "pt_method:run",
-        "pt_duration_micros:[400 TO 1000]",
-        "pt_duration_micros:[200 TO 400]"
+        "pt_tag:MNTG",
+        "",
+        "pt_duration_micros:[10000 TO 100000]",
+        "pt_duration_micros:[100000 TO 100000]",
+        "pt_duration_micros:[0 TO 100000]",
+        "pt_duration_micros:[1,000 TO 2,000]",
+        "pt_duration_micros:[FROM 100000]",
+        "pt_method:pushMessage",
+        "pt_duration_micros:[100001 TO 10000000]"
       ],
       "remember": 10,
       "enable": true

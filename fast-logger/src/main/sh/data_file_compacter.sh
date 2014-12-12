@@ -1,12 +1,12 @@
 #!/bin/sh
 
 # Linux paths
-INPUT_DIR=/data/logs/durations
-OUTPUT_DIR=/apps/performance-trends-visualizer/loginput
+#INPUT_DIR=/data/logs/durations
+#OUTPUT_DIR=/apps/performance-trends-visualizer/loginput
 
 # Windows compatible paths (to make the script work in Git bash)
-#INPUT_DIR=/D/logs/durations
-#OUTPUT_DIR=/C/performance-trends-visualizer/loginput
+INPUT_DIR=/D/logs/durations
+OUTPUT_DIR=/C/performance-trends-visualizer/loginput
 
 ORIGINAL_FILE_EXTENSION='*.data'
 numberOfInputFiles=`find $INPUT_DIR -type f -name $ORIGINAL_FILE_EXTENSION |wc -l`
