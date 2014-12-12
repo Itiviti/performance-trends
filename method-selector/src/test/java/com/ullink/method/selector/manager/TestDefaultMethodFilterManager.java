@@ -88,6 +88,12 @@ public class TestDefaultMethodFilterManager
     }
     
     @Test
+    public void methodsWithPackageAndClassWildCard_AreShown()
+    {
+        Assert.assertFalse(this.methodFilterManager.isMethodAllowed("com.ullink.performance-trends.visible2", "RandomClass1", "wildCardHiddenMethod"));
+    }
+    
+    @Test
     public void methodsWithPackagAndClassWildCard_AreHidden()
     {
         Assert.assertFalse(this.methodFilterManager.isMethodAllowed("com.ullink.performance-trends.visible", "RandomClass1", "methodHiddenInPackage"));

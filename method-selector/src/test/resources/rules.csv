@@ -7,3 +7,4 @@ com.ullink.performance-trends.visible;VisibleClass;hiddenMethod;false
 com.ullink.performance-trends.hidden;;;false
 com.ullink.performance-trends.visible;*;methodHiddenInPackage;false
 com.ullink.performance-trends.visible;*;methodShownInPackage;true
+com.ullink.performance-trends.visible2;*;*;true

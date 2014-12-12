@@ -9,7 +9,7 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
 {
     private final List<FilterEntry> whiteList;
     private final List<FilterEntry> blackList;
-    private static final String ALL_WILDCARD ="*";
+    private static final String     ALL_WILDCARD = "*";
 
     public DefaultMethodFilterManager(final Collection<FilterEntry> entries)
     {
@@ -93,7 +93,7 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
                 // skip class dedicated entries
                 continue;
             }
-            
+
             final String entryPackageName = filterEntry.getPackageName();
             if (entryPackageName.equals(packageName))
             {
@@ -102,7 +102,7 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
 
             if (isPackageParentOf(packageName, entryPackageName))
             {
-                if (closestEntry == null ||  getPackageSize(entryPackageName) > getPackageSize(closestEntry.getPackageName()))
+                if (closestEntry == null || getPackageSize(entryPackageName) > getPackageSize(closestEntry.getPackageName()))
                 {
                     closestEntry = filterEntry;
                 }
@@ -111,27 +111,26 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
         }
         return closestEntry;
     }
-    
+
     private static boolean isPackageParentOf(final String parent, final String child)
     {
-        if(ALL_WILDCARD.equals(parent))
+        if (ALL_WILDCARD.equals(parent))
         {
             return true;
         }
         return parent.startsWith(child) && child.length() < parent.length();
     }
-     
 
     private static FilterEntry getEntryWithSamePackageNameAndClassName(final String packageName, final String className, final Collection<FilterEntry> filterEntries)
     {
         for (final FilterEntry filterEntry : filterEntries)
-        {   
-            //skip method dedicated entries
-            if(filterEntry.getMethodName() != null &&  !filterEntry.getMethodName().isEmpty())
+        {
+            // skip method dedicated entries
+            if (filterEntry.getMethodName() != null && !filterEntry.getMethodName().isEmpty())
             {
                 continue;
             }
-            if (matchName(packageName, filterEntry.getPackageName())  && matchName(className, filterEntry.getClassName()))
+            if (matchName(packageName, filterEntry.getPackageName()) && matchName(className, filterEntry.getClassName()))
             {
                 return filterEntry;
             }
@@ -143,26 +142,24 @@ public final class DefaultMethodFilterManager implements MethodFilterManager
     {
         for (final FilterEntry filterEntry : filterEntries)
         {
-            if (matchName(packageName, filterEntry.getPackageName())  && matchName(className, filterEntry.getClassName()) && matchName(methodName, filterEntry.getMethodName()))
+            if (matchName(packageName, filterEntry.getPackageName()) && matchName(className, filterEntry.getClassName()) && matchName(methodName, filterEntry.getMethodName()))
             {
                 return filterEntry;
             }
         }
         return null;
     }
-    
-    private static boolean matchName(final String matcher, final String toMatch)
 
+    private static boolean matchName(final String matcher, final String toMatch)
     {
-        return ALL_WILDCARD.equals(toMatch) || matcher.equals(toMatch); 
+        return ALL_WILDCARD.equals(toMatch) || matcher.equals(toMatch);
     }
-    
-   
+
     /**
      * Gets the size of the package.
      * @param entryPackageName
      * @return the number of String delimited by "." + 1
-     * for a.b.c.d -> 4
+     *         for a.b.c.d -> 4
      */
     private static int getPackageSize(final String entryPackageName)
     {
