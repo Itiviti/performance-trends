@@ -2,7 +2,7 @@
 
 * Clone the project
 * In case you are behind an HTTP/HTTPS proxy set the environment variable: `GRADLE_OPTS` to `"-Dhttps.proxyHost=proxy -Dhttps.proxyPort=xxxx -Dhttp.proxyHost=proxy -Dhttp.proxyPort=xxxx"`
-* Run `gradlew clean assemble` from the project root directory. Note: you could run `gradlew clean test` will generate soem sample log files in the java temp dir.
+* Run `gradlew clean assemble` from the project root directory. Note: you could run `gradlew clean test` will generate some sample log files in the java io temp dir.
 * Import the project in IDEA / Eclipse starting from the existing Gradle model. In IDEA select option "Use default Gradle wrapper"
 
 # Attaching the Java profiler agent to an application to gather statistics
