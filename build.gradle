@@ -4,9 +4,7 @@ subprojects {
     group = 'com.ullink.performance.trends'
 
     repositories {
-        maven {
-            url 'http://ulcentral:8081/artifactory/repo'
-        }
+        mavenCentral()
     }
 
     dependencies {

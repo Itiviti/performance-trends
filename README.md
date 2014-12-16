@@ -1,8 +1,9 @@
 # Setting up the development environment
 
 * Clone the project
-* Run `gradlew clean build` from the project root directory
-* Import the project in IDEA / Eclipse starting from the existing Gradle model. In IDEA select option "Use default gradle wrapper"
+* In case you are behind an HTTP/HTTPS proxy set the environment variable: `GRADLE_OPTS` to `"-Dhttps.proxyHost=proxy -Dhttps.proxyPort=xxxx -Dhttp.proxyHost=proxy -Dhttp.proxyPort=xxxx"`
+* Run `gradlew clean assemble` from the project root directory. Note: you could run `gradlew clean test` will generate soem sample log files in the java temp dir.
+* Import the project in IDEA / Eclipse starting from the existing Gradle model. In IDEA select option "Use default Gradle wrapper"
 
 # Attaching the Java profiler agent to an application to gather statistics
 
@@ -28,7 +29,7 @@ The 3rd agent arg is a tag you can use like a project/product name which you att
 
  Start shell scipt `trends-visualizer/installer/compact_files.sh` like this:
 
- ./compact_files.sh
+ `./compact_files.sh`
 
  from a linux console or Git bash.
  This script also copies the resulted compacted/merged *.log file in the logstash input directory.
@@ -49,7 +50,7 @@ com.ullink.performance-trends.visible;VisibleClass;hiddenMethod;false   - hides 
 *;WildCardHiddenClass;;false                                            - hides all occurrences of the given class <br/>
 *;*;wildCardHiddenMethod;false                                          - hides all occurrences of the given method <br/>
 
-and pass it as the first agent argument
+and pass it as the first agent argument.
 
 # Visualizing the results in Kibana
 

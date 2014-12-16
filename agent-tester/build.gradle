@@ -4,5 +4,5 @@ dependencies {
 }
 
 test {
-    jvmArgs '-javaagent:../profiler-agent/build/libs/profiler-agent-1.0-SNAPSHOT.jar'
+    jvmArgs '-javaagent:../profiler-agent/build/libs/profiler-agent-1.0-SNAPSHOT.jar=src/test/resources/method-selection.csv'
 }
