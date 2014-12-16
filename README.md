@@ -2,7 +2,6 @@
 
 * Clone the project
 * Run `gradlew clean build` from the project root directory
-* Make sure your IDE has the company proxy configured properly (it will need to download a Gradle archive from the internet)
 * Import the project in IDEA / Eclipse starting from the existing Gradle model. In IDEA select option "Use default gradle wrapper"
 
 # Attaching the java profiler agent to any (Ullink) project to gather statistics while the tests run
