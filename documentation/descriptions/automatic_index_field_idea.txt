@@ -1,0 +1,7 @@
+Automatically add milliseconds and seconds to the index without adding it in the log file:
+
+Ideas:
+http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-scripting.html
+http://www.gridshore.nl/2014/07/26/transform-the-input-before-indexing-in-elasticsearch/
+https://gist.github.com/amrelhagary/f664c4bc239698a9b293
+http://www.elasticsearch.org/guide/en/elasticsearch/guide/current/custom-dynamic-mapping.html

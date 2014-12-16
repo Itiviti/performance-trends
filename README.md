@@ -11,59 +11,11 @@
 
 When attaching the Java agent you can specify 3 args after the `=` sign, like in the below example:
 
-`-javaagent:d:\\Data\\Code\\performance-trends\\profiler-agent\\build\\libs\\profiler-agent-1.0-SNAPSHOT.jar=d:\\Data\\method-selection.properties,d:\\logs,SMART`
+`-javaagent:d:\\Data\\Code\\performance-trends\\profiler-agent\\build\\libs\\profiler-agent-1.0-SNAPSHOT.jar=d:\\Data\\method-selection.properties,d:\\logs,SAMPLETAG`
 
 The 1st agent arg is the path to method selector file (mandatory)
 The 2nd agent arg in the desired output location (optional, it defaults to java temp dir)
 The 3rd agent arg is a tag you can use like a project/product name which you attached the profiler to (optional, defaults to NOTAG)
-
-## Test it in Ant projects:
-
-```
-ant test -Dtest.jvmarg="-javaagent:d:\\Data\\Code\\performance-trends\\profiler-agent\\build\\libs\\profiler-agent-1.0-SNAPSHOT.jar=d:\\Data\\method-selection.properties,d:\\logs,SMART"
-```
-
-Example linux version:
-
-```
-ant test -Dtest.jvmarg="-javaagent:/data/code/performance-trends/profiler-agent/build/libs/profiler-agent-1.0-SNAPSHOT.jar=/data/method-selection.properties,/data/logs,SMART"
-```
-
-
-## Test it in Gradle projects
-
-In Gradle there is no possibility to pass the test JVM args from command line, so you'll have to modify your project's Gradle build file by adding:
-
-```
-if (isProfilingEnabled()) {
-    test {
-        jvmArgs '-javaagent:d:\\Data\\Code\\performance-trends\\profiler-agent\\build\\libs\\profiler-agent-1.0-SNAPSHOT.jar=d:\\Data\\method-selection.properties,d:\\logs,EDMA'
-    }
-}
-```
-
-and defining method:
-
-```
-def isProfilingEnabled(){
-    project.hasProperty('doProfile') && project.doProfile instanceof String
-}
-```
-
-and then running the build like in the below example:
-
- `gradlew clean build -PdoProfile`
-
-
- Example linux version:
-
-```
-    if (isProfilingEnabled()) {
-        test {
-            jvmArgs '-javaagent:/data/code/performance-trends/profiler-agent//build/libs/profiler-agent-1.0-SNAPSHOT.jar=/data/method-selection.properties,/data/logs,EDMA'
-        }
-    }
-```
 
 # Where to look for the log files?
 

@@ -1,1 +1,1 @@
-include 'fast-logger', 'method-selector', 'log-formatter', 'profiler-agent', 'agent-tester', 'aop-interceptor', 'guice-aop-example', 'spring-aop-example', 'kibana-dashboard'
+include 'fast-logger', 'method-selector', 'log-formatter', 'profiler-agent', 'agent-tester', 'aop-interceptor', 'guice-aop-example', 'spring-aop-example'

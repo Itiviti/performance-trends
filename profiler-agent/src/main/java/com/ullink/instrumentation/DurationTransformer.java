@@ -15,12 +15,6 @@ import static com.ullink.performance.log.fomat.PerformanceTrendLogFormatter.*;
 
 public class DurationTransformer implements ClassFileTransformer
 {
-    /**
-     * e.g. EDMA: com.ullink.ulbridge.plugins
-     * e.g. only main EDMA entry class and classes from the same package: com.ullink.ulbridge.plugins.edma
-     * e.g. SMART: com.ullink.ulbridge2.modules.bee
-     * e.g. both EDMA and SMART: com.ullink.ulbridge
-     */
     private static final String START_TIME_VAR_NAME           = "PT_$tArTtImE";
     private static final String CURRENT_TIME_MILLIS           = ESCAPED_QUOTES + " + System.currentTimeMillis() + " + ESCAPED_QUOTES;
     private static final String THREAD_NAME                   = ESCAPED_QUOTES + " + Thread.currentThread().getName() + " + ESCAPED_QUOTES;

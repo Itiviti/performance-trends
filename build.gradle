@@ -1,11 +1,5 @@
-allprojects {
-    apply plugin: 'idea'
-}
-
 subprojects {
-
     apply plugin: 'java'
-    sourceCompatibility = 1.6
     version = '1.0-SNAPSHOT'
     group = 'com.ullink.performance.trends'
 
