@@ -9,3 +9,4 @@ out/
 .settings/
 *.log
 *.iml
+download-temp/
