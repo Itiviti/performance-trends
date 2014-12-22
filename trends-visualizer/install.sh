@@ -1,11 +1,13 @@
 #!/bin/sh
 
-# TODOs
+# remaining TODOs
 # - check SHA1/MD5 for the zip archives before deciding whether to download or not
-# - unzip only if not yet unzipped (not sure yet how to check)
-# - make the compact_file.sh script aware of the install location.
+# - unzip only if not yet unzipped (not sure yet how to check, but would speed up things)
 # - start elasticsearch and create the schema using CURL after it's already running (check with ping when it's already up) or check for other ways to create the schema).
+# - HTTP/HTTPS proxy support (which can be enabled form the install.conf file)
 # - import kibana dashboard (not sure sure how to do it, but it looks like it's stored in the index, so curl might work)
+# - kibana, elasticsearch config placeholders for being able to refer them with host names not only on localhost
+# - make log importer script be able to run as a daemon (tail data files and loop forever)
 
 INSTALL_START_TIME=$SECONDS
 
@@ -44,9 +46,9 @@ downloadFile $TOMCAT_REMOTE_ARCHIVE_URL "$DOWNLOAD_TEMP_DIR/$TOMCAT_LOCAL_ARCHIV
 
 DOWNLOAD_DURATION=$(($SECONDS - $INSTALL_START_TIME))
 
-#unzipArchive "$DOWNLOAD_TEMP_DIR/$ELASTICSEARCH_LOCAL_ARCHIVE_NAME" $INSTALL_DIR
-#unzipArchive "$DOWNLOAD_TEMP_DIR/$LOGSTASH_LOCAL_ARCHIVE_NAME" $INSTALL_DIR
-#unzipArchive "$DOWNLOAD_TEMP_DIR/$TOMCAT_LOCAL_ARCHIVE_NAME" $INSTALL_DIR
+unzipArchive "$DOWNLOAD_TEMP_DIR/$ELASTICSEARCH_LOCAL_ARCHIVE_NAME" $INSTALL_DIR
+unzipArchive "$DOWNLOAD_TEMP_DIR/$LOGSTASH_LOCAL_ARCHIVE_NAME" $INSTALL_DIR
+unzipArchive "$DOWNLOAD_TEMP_DIR/$TOMCAT_LOCAL_ARCHIVE_NAME" $INSTALL_DIR
 unzipArchive "$DOWNLOAD_TEMP_DIR/$KIBANA_LOCAL_ARCHIVE_NAME" $DOWNLOAD_TEMP_DIR
 
 tomcatWebAppsFolderMatcher="$TOMCAT_WEBAPPS_FOLDER/*"
@@ -65,6 +67,7 @@ rm -rf "$DOWNLOAD_TEMP_DIR/$KIBANA_FOLDER_NAME"
 echo 'Copying linux starter script'
 cp "$SCRIPT_DIR/scripts/start.sh" "$INSTALL_DIR/"
 handlePossibleError $?
+chmod +x $INSTALL_DIR/start.sh
 
 echo 'Copying windows starter script'
 cp "$SCRIPT_DIR/scripts/start.bat" "$INSTALL_DIR/"
@@ -78,30 +81,31 @@ echo 'Copying kibana config'
 cp "$SCRIPT_DIR/configuration/kibana/config.js" "$tomcatWebAppsRoot/"
 handlePossibleError $?
 
-echo 'Copying file compacter shell script'
-importScriptTemplateSourcePath="$SCRIPT_DIR/scripts/import_logs.sh.template"
-importScriptDestPath="$INSTALL_DIR/import_logs.sh"
-importScriptTemplateDestPath="$importScriptDestPath.template"
-cp $importScriptTemplateSourcePath $importScriptTemplateDestPath
+echo 'Copying log-importer script'
+logImporterFolderName='log-importer'
+importScriptFilename='run.sh'
+cp -R "$SCRIPT_DIR/configuration/$logImporterFolderName" "$INSTALL_DIR/"
+handlePossibleError $?
+
+echo 'Replacing placeholders in log importer script'
+importScriptDestPath="$INSTALL_DIR/$logImporterFolderName/$importScriptFilename"
+replacePlaceHolderInFile $importScriptDestPath '{COMPACTER_INPUT_FOLDER_PLACEHOLDER}' $AGENT_DATA_FILE_DIR
+handlePossibleError $?
+replacePlaceHolderInFile $importScriptDestPath '{COMPACTER_OUTPUT_FOLDER_PLACEHOLDER}' $LOGSTASH_INPUT_DIRECTORY
+handlePossibleError $?
 
 handlePossibleError $?
-echo 'Updating file compacter shell script with real folders'
-sed "s/{COMPACTER_INPUT_FOLDER_PLACEHOLDER}/$(echo "$AGENT_DATA_FILE_DIR" | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e 's/&/\\\&/g')/g" $importScriptTemplateDestPath > $importScriptDestPath
-handlePossibleError $?
 chmod +x $importScriptDestPath
-rm -rf importScriptTemplateDestPath
 
 echo 'Copying logstash config'
 cp -R "$SCRIPT_DIR/configuration/logstash/"* "$INSTALL_DIR/$LOGSTASH_FOLDER_NAME/"
 handlePossibleError $?
 
-# replace placeholder in logstash configuration with the configured input pattern
-echo 'Updating logstash config with the path pattern value taken from install.conf'
+echo 'Replacing placeholders in logstash conf file'
 logstashConfFilePath="$INSTALL_DIR/$LOGSTASH_FOLDER_NAME/lib/logstash/config/trends-visualizer.conf"
-logstashConfFileTemplatePath="$logstashConfFilePath.template"
-sed "s/{LOGSTASH_INPUT_PATH_PLACEHOLDER}/$(echo "$LOGSTASH_INPUT_PATH_PATTERN" | sed -e 's/\\/\\\\/g' -e 's/\//\\\//g' -e 's/&/\\\&/g')/g" $logstashConfFileTemplatePath > $logstashConfFilePath
+logstashInputPathPattern="$LOGSTASH_INPUT_DIRECTORY/*.log"
+replacePlaceHolderInFile $logstashConfFilePath '{LOGSTASH_INPUT_PATH_PLACEHOLDER}' "$logstashInputPathPattern"
 handlePossibleError $?
-rm -rf $logstashConfFileTemplatePath
 
 mkdir -p "$INSTALL_DIR/loginput"
 
@@ -113,7 +117,7 @@ echo "LOGSTASH=$LOGSTASH_FOLDER_NAME" >> "$homeDirsFile"
 echo "TOMCAT=$TOMCAT_FOLDER_NAME" >> "$homeDirsFile"
 
 echo 'Cleaning up temporary installation files'
-#rm -rf "$DOWNLOAD_TEMP_DIR/"
+rm -rf "$DOWNLOAD_TEMP_DIR/"
 
 INSTALLATION_DURATION=$(($SECONDS - $INSTALL_START_TIME))
 echo "Installation finished! It took $INSTALLATION_DURATION seconds in total, from which $DOWNLOAD_DURATION seconds were spent downloading."
