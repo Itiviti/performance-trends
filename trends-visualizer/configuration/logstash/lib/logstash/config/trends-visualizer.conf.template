@@ -1,6 +1,6 @@
 input {
   file {
-    path => ["/apps/performance-trends-visualizer/loginput/*.log"]
+    path => [ "{LOGSTASH_INPUT_PATH_PLACEHOLDER}" ]
     type => "performance-trend"
     start_position => "beginning"
   }

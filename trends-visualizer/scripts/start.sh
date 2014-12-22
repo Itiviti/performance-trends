@@ -1,18 +1,17 @@
 #!/bin/sh
 
-source .homedirs
+APP_DIR="$( cd "$(dirname "$0")" ; pwd -P )"
+source $APP_DIR/.appdirs
 
-BIN_DIR=`pwd`
+ELASTICSEARCH_BIN="$APP_DIR/$ELASTICSEARCH/bin"
+LOGSTASH_BIN="$APP_DIR/$LOGSTASH/bin"
+TOMCAT_BIN="$APP_DIR/$TOMCAT/bin"
 
-echo $ELASTICSEARCH
-echo $LOGSTASH
-echo $TOMCAT
+cd $ELASTICSEARCH_BIN
+x-terminal-emulator -e ./elasticsearch
 
-cd "$BIN_DIR/$ELASTICSEARCH/bin/"
-#x-terminal-emulator -e ./elasticsearch
+cd $LOGSTASH_BIN
+x-terminal-emulator -e ./logstash agent -f "$APP_DIR/$LOGSTASH/lib/logstash/config/trends-visualizer.conf"
 
-cd "$BIN_DIR/$LOGSTASH/bin/"
-#x-terminal-emulator -e ./logstash agent -f $LOGSTASH_HOME/lib/logstash/config/performance-trends-visualizer-linux.conf
-
-cd "$BIN_DIR/$TOMCAT/bin/"
+cd $TOMCAT_BIN
 ./catalina.sh run
