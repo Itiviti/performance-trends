@@ -35,7 +35,7 @@ echo "Visualizer will be installed to $INSTALL_DIR"
 mkdir -p $INSTALL_DIR
 handlePossibleError $?
 
-echo "Files will be downloaded to $DOWNLOAD_TEMP_DIR"
+echo "Temporary files will be downloaded to $DOWNLOAD_TEMP_DIR"
 mkdir -p $DOWNLOAD_TEMP_DIR
 handlePossibleError $?
 
@@ -94,8 +94,7 @@ handlePossibleError $?
 replacePlaceHolderInFile $importScriptDestPath '{COMPACTER_OUTPUT_FOLDER_PLACEHOLDER}' $LOGSTASH_INPUT_DIRECTORY
 handlePossibleError $?
 
-handlePossibleError $?
-chmod +x $importScriptDestPath
+chmod +x "$INSTALL_DIR/$logImporterFolderName/"*.sh
 
 echo 'Copying logstash config'
 cp -R "$SCRIPT_DIR/configuration/logstash/"* "$INSTALL_DIR/$LOGSTASH_FOLDER_NAME/"
@@ -123,4 +122,4 @@ INSTALLATION_DURATION=$(($SECONDS - $INSTALL_START_TIME))
 echo "Installation finished! It took $INSTALLATION_DURATION seconds in total, from which $DOWNLOAD_DURATION seconds were spent downloading."
 
 echo "To start up the visualizer run: $INSTALL_DIR/start.sh (on Linux) or $INSTALL_DIR/start.bat (on Windows)."
-echo "The kibana dashboard is available under URL: http://localhost:8080/index.html#/dashboard/file/performance-dashboard.json"
+echo "The performance dashboard will be available at: http://localhost:8080/index.html#/dashboard/file/performance-dashboard.json"

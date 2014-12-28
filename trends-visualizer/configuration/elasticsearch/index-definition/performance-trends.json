@@ -5,10 +5,11 @@
         "pt_package" : {"type": "string", "index" : "not_analyzed" },
         "pt_class" : {"type": "string", "index" : "not_analyzed" },
         "pt_method" : {"type": "string", "index" : "not_analyzed" },
-        "pt_method_args" : { "type" : "string", "index" : "not_analyzed" },
         "pt_thread" : { "type" : "string", "index" : "not_analyzed" },
         "pt_duration_micros" : { "type" : "integer" },
-        "pt_date_epoch" : { "type" : "date"}
+        "pt_date_epoch" : { "type" : "date"},
+        "pt_args" : { "type" : "string", "index" : "not_analyzed" },
+        "pt_tag" : { "type" : "string", "index" : "not_analyzed" }
       }
     }
   }

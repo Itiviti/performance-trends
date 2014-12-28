@@ -8,9 +8,12 @@ echo %currentDirPath%
 SET elasticSearchBin=%currentDirPath%/%ELASTICSEARCH%/bin
 SET logstashHome=%currentDirPath%/%LOGSTASH%
 SET tomcatBin=%currentDirPath%/%TOMCAT%/bin
+SET logimporterHome=%currentDirPath%/logimporter
 
 cd %elasticSearchBin%
 start elasticsearch.bat
+
+sh -c "%logimporterHome%/create_index.sh"
 
 cd %logstashHome%
 SET logstashHomeWithReversedSlash=%logstashHome:\=/%
