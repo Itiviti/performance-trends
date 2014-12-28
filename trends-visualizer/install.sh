@@ -1,13 +1,13 @@
 #!/bin/sh
 
 # remaining TODOs
-# - check SHA1/MD5 for the zip archives before deciding whether to download or not
+# - check SHA1/MD5 for the zip archives before deciding whether to re-download or not
 # - unzip only if not yet unzipped (not sure yet how to check, but would speed up things)
 # - start elasticsearch and create the schema using CURL after it's already running (check with ping when it's already up) or check for other ways to create the schema).
 # - HTTP/HTTPS proxy support (which can be enabled form the install.conf file)
 # - import kibana dashboard (not sure sure how to do it, but it looks like it's stored in the index, so curl might work)
 # - kibana, elasticsearch config placeholders for being able to refer them with host names not only on localhost
-# - make log importer script be able to run as a daemon (tail data files and loop forever)
+# - make log importer script be able to run as a daemon (tail data files and loop forever, in a multi-tail style, but with a dynamic number of files)
 
 INSTALL_START_TIME=$SECONDS
 
@@ -77,12 +77,12 @@ echo 'Copying elasticsearch config'
 cp -R "$SCRIPT_DIR/configuration/elasticsearch/"* "$INSTALL_DIR/$ELASTICSEARCH_FOLDER_NAME/"
 handlePossibleError $?
 
-echo 'Copying kibana config'
-cp "$SCRIPT_DIR/configuration/kibana/config.js" "$tomcatWebAppsRoot/"
+echo 'Copying kibana configuration and dashboard'
+cp -R "$SCRIPT_DIR/configuration/kibana/"* "$tomcatWebAppsRoot/"
 handlePossibleError $?
 
-echo 'Copying log-importer script'
-logImporterFolderName='log-importer'
+echo 'Copying logimporter script'
+logImporterFolderName='logimporter'
 importScriptFilename='run.sh'
 cp -R "$SCRIPT_DIR/configuration/$logImporterFolderName" "$INSTALL_DIR/"
 handlePossibleError $?
@@ -123,3 +123,4 @@ INSTALLATION_DURATION=$(($SECONDS - $INSTALL_START_TIME))
 echo "Installation finished! It took $INSTALLATION_DURATION seconds in total, from which $DOWNLOAD_DURATION seconds were spent downloading."
 
 echo "To start up the visualizer run: $INSTALL_DIR/start.sh (on Linux) or $INSTALL_DIR/start.bat (on Windows)."
+echo "The kibana dashboard is available under URL: http://localhost:8080/index.html#/dashboard/file/performance-dashboard.json"

@@ -1,4 +1,3 @@
-# What this project is about?
 To understand the what / why / how please read the [introduction from our wiki.](https://github.com/Ullink/performance-trends/wiki)
 
 # Setting up the development environment
