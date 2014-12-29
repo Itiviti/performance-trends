@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 APP_DIR="$( cd "$(dirname "$0")" ; pwd -P )"
 source $APP_DIR/.appdirs
@@ -11,7 +11,7 @@ LOGIMPORTER_HOME="$APP_DIR/logimporter"
 cd $ELASTICSEARCH_BIN
 x-terminal-emulator -e ./elasticsearch
 
-sh -c "$LOGIMPORTER_HOME/create_index.sh"
+bash -c "$LOGIMPORTER_HOME/create_index.sh"
 
 cd $LOGSTASH_BIN
 x-terminal-emulator -e ./logstash agent -f "$APP_DIR/$LOGSTASH/lib/logstash/config/trends-visualizer.conf"

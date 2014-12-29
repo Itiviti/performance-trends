@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # remaining TODOs
 # - check SHA1/MD5 for the zip archives before deciding whether to re-download or not
