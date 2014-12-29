@@ -83,7 +83,7 @@ handlePossibleError $?
 
 echo 'Copying logimporter script'
 logImporterFolderName='logimporter'
-importScriptFilename='run.sh'
+importScriptFilename='import.sh'
 cp -R "$SCRIPT_DIR/configuration/$logImporterFolderName" "$INSTALL_DIR/"
 handlePossibleError $?
 
