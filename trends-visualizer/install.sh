@@ -16,8 +16,8 @@ source scripts/file_helper.sh
 SCRIPT_DIR="$( cd "$(dirname "$0")" ; pwd -P )"
 
 ZIP_SUFFIX='.zip'
-DOWNLOAD_SUBDIR_NAME='download-temp'
-DOWNLOAD_TEMP_DIR="$INSTALL_DIR/$DOWNLOAD_SUBDIR_NAME"
+TEMPDIR_NAME='temp'
+DOWNLOAD_TEMP_DIR="$INSTALL_DIR/$TEMPDIR_NAME"
 
 ELASTICSEARCH_LOCAL_ARCHIVE_NAME="${ELASTICSEARCH_REMOTE_ARCHIVE_URL##*/}"
 LOGSTASH_LOCAL_ARCHIVE_NAME="${LOGSTASH_REMOTE_ARCHIVE_URL##*/}"
@@ -116,7 +116,7 @@ echo "LOGSTASH=$LOGSTASH_FOLDER_NAME" >> "$homeDirsFile"
 echo "TOMCAT=$TOMCAT_FOLDER_NAME" >> "$homeDirsFile"
 
 echo 'Cleaning up temporary installation files'
-rm -rf "$DOWNLOAD_TEMP_DIR/"
+#rm -rf "$DOWNLOAD_TEMP_DIR/"
 
 INSTALLATION_DURATION=$(($SECONDS - $INSTALL_START_TIME))
 echo "Installation finished! It took $INSTALLATION_DURATION seconds in total, from which $DOWNLOAD_DURATION seconds were spent downloading."
