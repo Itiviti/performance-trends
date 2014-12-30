@@ -30,6 +30,7 @@ getFileNameWithoutZipExtension $KIBANA_LOCAL_ARCHIVE_NAME KIBANA_FOLDER_NAME
 getFileNameWithoutZipExtension $TOMCAT_LOCAL_ARCHIVE_NAME TOMCAT_FOLDER_NAME
 
 TOMCAT_WEBAPPS_FOLDER="$INSTALL_DIR/$TOMCAT_FOLDER_NAME/webapps"
+TOMCAT_BIN_FOLDER="$INSTALL_DIR/$TOMCAT_FOLDER_NAME/bin"
 
 echo "Visualizer will be installed to $INSTALL_DIR"
 mkdir -p $INSTALL_DIR
@@ -63,6 +64,8 @@ echo "Moving exploded Kibana to Tomcat's root folder: $tomcatWebAppsRoot"
 mv "$DOWNLOAD_TEMP_DIR/$KIBANA_FOLDER_NAME" $tomcatWebAppsRoot
 handlePossibleError $?
 rm -rf "$DOWNLOAD_TEMP_DIR/$KIBANA_FOLDER_NAME"
+
+chmod +x "$TOMCAT_BIN_FOLDER/"*.sh
 
 echo 'Copying linux starter script'
 cp "$SCRIPT_DIR/scripts/start.sh" "$INSTALL_DIR/"
