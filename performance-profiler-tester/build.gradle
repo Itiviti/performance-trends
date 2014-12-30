@@ -1,0 +1,13 @@
+apply plugin: 'java'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+test {
+    jvmArgs '-javaagent:D:/Users/Laci/code/performance-trends/performance-profiler/build/libs/performance-profiler-1.0-SNAPSHOT.jar=src/test/resources/method-selection.csv,D:/logs,TESTTAG'
+}
