@@ -1,5 +1,0 @@
-dependencies {
-    compile group: 'aopalliance', name: 'aopalliance', version: '1.0'
-    compile project(':log-formatter')
-    compile project(':fast-logger')
-}

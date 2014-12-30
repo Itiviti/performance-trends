@@ -1,0 +1,9 @@
+1) a) Windows: Git Bash (comes by default with msysgit) and in path (writing bash from windows command line should be able to open it)
+   b) Linux: unzip and curl installed, chmod +x install.sh
+
+2) Java 7+ installed and in path
+
+3) 
+
+
+TODO: catalina.sh (and other sh scripts) chmod +x

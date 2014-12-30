@@ -13,7 +13,7 @@ To understand the what / why / how please read the [introduction from our wiki.]
 
 When attaching the Java agent you can specify 3 args after the `=` sign, like in the below example:
 
-`-javaagent:d:\\Data\\Code\\performance-trends\\profiler-agent\\build\\libs\\profiler-agent-1.0-SNAPSHOT.jar=d:\\Data\\method-selection.csv,d:\\logs,SAMPLETAG`
+`-javaagent:d:\\Data\\Code\\performance-trends\\performance-profiler\\build\\libs\\performance-profiler-1.0-SNAPSHOT.jar=d:\\Data\\method-selection.csv,d:\\logs,SAMPLETAG`
 
 The 1st agent arg is the path to method selector file (optional, by default it will match all public methods from all classes)
 The 2nd agent arg in the desired output location (optional, it defaults to java temp dir)

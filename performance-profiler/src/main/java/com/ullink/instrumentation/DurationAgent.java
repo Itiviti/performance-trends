@@ -13,7 +13,7 @@ public class DurationAgent
         System.out.println("Ullink profiler agent attached!");
 
         /**
-         * Agent args can be passed in like this: -javaagent:d:\Data\profiler-agent-1.0-SNAPSHOT.jar=d:\Data\method-selection.properties,d:\logs,SAMPLETAG
+         * Agent args can be passed in like this: -javaagent:d:\Data\performance-profiler-1.0-SNAPSHOT.jar=d:\Data\method-selection.properties,d:\logs,SAMPLETAG
          * Simple convention:
          * - first arg is the path to the properties file in which the method selector is configured (mandatory)
          * - second arg is the location where the duration logs are generated (optional, default location being the java temp dir's durations folder)

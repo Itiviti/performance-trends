@@ -1,8 +1,8 @@
 dependencies {
     /* The agent jar must be assembled before referring it below, non-necessary dependency for real-life projects */
-    runtime project(':profiler-agent')
+    runtime project(':performance-profiler')
 }
 
 test {
-    jvmArgs '-javaagent:../profiler-agent/build/libs/profiler-agent-1.0-SNAPSHOT.jar=src/test/resources/method-selection.csv'
+    jvmArgs '-javaagent:../performance-profiler/build/libs/performance-profiler-1.0-SNAPSHOT.jar=src/test/resources/method-selection.csv'
 }
