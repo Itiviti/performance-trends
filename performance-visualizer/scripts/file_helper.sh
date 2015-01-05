@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 function handlePossibleError {
   errorCode=$1
   if [ $errorCode -ne 0 ]; then
@@ -12,10 +11,14 @@ function handlePossibleError {
 function downloadFile {
   remoteLocation=$1
   downloadLocation=$2
+  if [ "$HTTP_PROXY" != '' ]; then
+    echo "Using http proxy $HTTP_PROXY for the next download."
+    curlProxyOptions="-x $HTTP_PROXY"
+  fi
   if [ ! -f $downloadLocation ]
     then
     echo "Downloading $remoteLocation to $downloadLocation"
-    curl -o $downloadLocation $remoteLocation
+    curl -o $downloadLocation $remoteLocation $curlProxyOptions
     handlePossibleError $?
   else
     echo "File $downloadLocation found, no need for downloading it."
