@@ -23,7 +23,7 @@ public class DurationTransformer implements ClassFileTransformer
 
     private MethodFilterManager methodFilterManager;
 
-    public DurationTransformer(String csvFilePath, String tag) throws FileNotFoundException, IOException
+    public DurationTransformer(String csvFilePath, String tag) throws IOException
     {
         if (tag != null)
         {
@@ -45,14 +45,14 @@ public class DurationTransformer implements ClassFileTransformer
 
     public byte[] transform(ClassLoader loader, String className, Class classBeingRedefined, ProtectionDomain protectionDomain, byte[] classFileBuffer) throws IllegalClassFormatException
     {
-
         byte[] instrumentedBytes = null;
 
         /* Skipping inner classes and also avoid instrumenting FastLogger itself (that would lead to stack overflow) */
-        if (!className.contains(FastLogger.class.getSimpleName()) && !className.contains("$"))
+        if (className != null && !className.contains(FastLogger.class.getSimpleName()) && !className.contains("$"))
         {
             try
             {
+                System.out.println("Transforming class: " + className);
                 instrumentedBytes = getInstrumentedBytes(classFileBuffer);
             }
             catch (Exception e)
@@ -79,7 +79,7 @@ public class DurationTransformer implements ClassFileTransformer
         for (CtMethod method : methods)
         {
             int methodModifiers = method.getModifiers();
-            if (Modifier.isPublic(methodModifiers) && !Modifier.isNative(methodModifiers) && !Modifier.isAbstract(methodModifiers))
+            if (!Modifier.isPrivate(methodModifiers) && !Modifier.isNative(methodModifiers) && !Modifier.isAbstract(methodModifiers))
             {
                 CtClass instrumentedClass = method.getDeclaringClass();
                 String packageName = instrumentedClass.getPackageName();
@@ -89,6 +89,7 @@ public class DurationTransformer implements ClassFileTransformer
                 /* TODO use method-selector utilities instead of this method! */
                 if (isInstrumentationEnabledForMethod(packageName, className, methodName))
                 {
+                    System.out.println("Instrumenting class + method: " + className + " " + methodName);
                     method.addLocalVariable(START_TIME_VAR_NAME, CtClass.longType);
                     method.insertBefore(START_TIME_VAR_NAME + " = System.nanoTime();");
                     for (CtClass param : method.getParameterTypes())

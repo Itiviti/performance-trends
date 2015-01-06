@@ -9,5 +9,5 @@ dependencies {
 }
 
 test {
-    jvmArgs '-javaagent:D:/Users/Laci/code/performance-trends/performance-profiler/build/libs/performance-profiler-1.0-SNAPSHOT.jar=src/test/resources/method-selection.csv,D:/logs,TESTTAG'
+    jvmArgs '-javaagent:../performance-profiler/build/libs/performance-profiler-1.0-SNAPSHOT.jar=src/test/resources/method-selection.csv,D:/logs,TESTTAG'
 }
