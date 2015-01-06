@@ -7,6 +7,6 @@ out/
 .classpath
 .project
 .settings/
-*.log
+/logs/
 *.iml
 download-temp/

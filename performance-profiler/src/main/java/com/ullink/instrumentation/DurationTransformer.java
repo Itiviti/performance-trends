@@ -52,7 +52,6 @@ public class DurationTransformer implements ClassFileTransformer
         {
             try
             {
-                System.out.println("Transforming class: " + className);
                 instrumentedBytes = getInstrumentedBytes(classFileBuffer);
             }
             catch (Exception e)
@@ -89,7 +88,6 @@ public class DurationTransformer implements ClassFileTransformer
                 /* TODO use method-selector utilities instead of this method! */
                 if (isInstrumentationEnabledForMethod(packageName, className, methodName))
                 {
-                    System.out.println("Instrumenting class + method: " + className + " " + methodName);
                     method.addLocalVariable(START_TIME_VAR_NAME, CtClass.longType);
                     method.insertBefore(START_TIME_VAR_NAME + " = System.nanoTime();");
                     for (CtClass param : method.getParameterTypes())
