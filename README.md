@@ -13,7 +13,7 @@ To understand the what / why / how please read the [introduction from our wiki.]
 
 When attaching the Java agent you can specify 3 args after the `=` sign, like in the below example:
 
-`-javaagent:d:\\Data\\Code\\performance-trends\\performance-profiler\\build\\libs\\performance-profiler-1.0-SNAPSHOT.jar=d:\\Data\\method-selection.csv,d:\\logs,SAMPLETAG`
+`-javaagent:d:/Data/Code/performance-trends/performance-profiler/build/libs/performance-profiler-1.0-SNAPSHOT.jar=d:/Data/method-selection.csv,d:/logs,SAMPLETAG`
 
 The 1st agent arg is the path to method selector file (optional, by default it will match all public methods from all classes)
 The 2nd agent arg in the desired output location (optional, it defaults to java temp dir)
@@ -21,21 +21,10 @@ The 3rd agent arg is a tag you can use like a project/product name which you att
 
 # Where to look for the log files?
 
- By default logs are generated as *.data in the java temp dir's `durations/` subdirectory, but you can change this default using a java agent arg (see section on Java agent args).
+ By default logs are generated as *.data in the java temp dir's `durations/` subdirectory, but you can change this default using a java agent arg (see previous section on the 2nd Java agent arg).
  These are memory mapped binary files which contain text and have a size of 32MB (at least).
  Each process and thread has it's own file. On linux the disk space is lazily occupied, while on Windows 32MB is occupied from the start.
  After profiling ran you need o compact the files (remove the nulls / empty lines from it). See the next section on the easiest way to do this.
-
-
-# How can I merge the multiple log files in a single one?
-
- Start shell scipt `trends-visualizer/installer/compact_files.sh` like this:
-
- `./compact_files.sh`
-
- from a linux console or Git bash.
- This script also copies the resulted compacted/merged *.log file in the logstash input directory.
-  Compacting might need a few minutes (depending on the quantity of logged lines available in the *.data files).
 
 # How to filter watched methods?
 
@@ -54,9 +43,12 @@ com.ullink.performance-trends.visible;VisibleClass;hiddenMethod;false   - hides 
 
 and pass it as the first agent argument.
 
-# Visualizing the results in Kibana
-
-TODO: finish the installer and then add instructions here!
- 
-# Markdown?
-For formatting tips check [Markdown cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
+# Installing the performance visualizer:
+## edit file `performance-visualizer/install.conf`, avoid blanks/spaces in the used folder/file names
+## start the installer from a linux terminal (or a Git bash in windows) and wait for the installer to finish. Futher instructions you'll find during installation:
+`./install.sh`
+## Access Kibana at http://localhost:8080/index.html#/dashboard/file/performance-dashboard.json
+## After gathering data with the profiler (in *.data files) you need to compact and copy them to the logstash input folder using script `performance-visualizer-install-dir/logimporter/import.sh`. Just start this shell script like this:
+ `./import.sh`
+ from a linux console or Git bash.
+Compacting & copying the files might need a few minutes (depending on the quantity of logged lines available in the *.data files).
