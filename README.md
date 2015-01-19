@@ -44,11 +44,11 @@ com.ullink.performance-trends.visible;VisibleClass;hiddenMethod;false   - hides 
 and pass it as the first agent argument.
 
 # Installing the performance visualizer:
-## edit file `performance-visualizer/install.conf`, avoid blanks/spaces in the used folder/file names
-## start the installer from a linux terminal (or a Git bash in windows) and wait for the installer to finish. Futher instructions you'll find during installation:
+- edit file `performance-visualizer/install.conf`, avoid blanks/spaces in the used folder/file names
+- start the installer from a linux terminal (or a Git bash in windows) and wait for the installer to finish. Futher instructions you'll find during installation:
 `./install.sh`
-## Access Kibana at http://localhost:8080/index.html#/dashboard/file/performance-dashboard.json
-## After gathering data with the profiler (in *.data files) you need to compact and copy them to the logstash input folder using script `performance-visualizer-install-dir/logimporter/import.sh`. Just start this shell script like this:
+- Access Kibana at http://localhost:8080/index.html#/dashboard/file/performance-dashboard.json
+- After gathering data with the profiler (in *.data files) you need to compact and copy them to the logstash input folder using script `performance-visualizer-install-dir/logimporter/import.sh`. Just start this shell script like this:
  `./import.sh`
  from a linux console or Git bash.
 Compacting & copying the files might need a few minutes (depending on the quantity of logged lines available in the *.data files).
